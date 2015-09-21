@@ -16,7 +16,7 @@ double norma_1(std::vector<double> v){
 }
 
 
-std::vector<double> pagerank(Matriz m, double c, double tolerancia){
+std::vector<double> pagerank(Matriz p_trans, double c, double tolerancia){
     // uso el algoritmo 1 de kamvar et al.
     uint nodes = m.get_nodes();
     std::vector<double> x(nodes, 1./nodes), y, v(nodes, 1./nodes);
@@ -25,7 +25,7 @@ std::vector<double> pagerank(Matriz m, double c, double tolerancia){
 
  
     while(1){
-        y = m.multiplicar(x);
+        y = p_trans.multiplicar(x);
         for(uint i = 0; i<y.size(); i++)
             y[i] *= c;
     
@@ -65,11 +65,11 @@ void resolver(int tipo_de_instancia,
    // }
     
     if(tipo_de_instancia == 0){ // PAGINAS WEB
-        Matriz m(red_file);
-        m.mostrar();
+        Matriz p_trans(red_file);
+        p_trans.mostrar();
         red_file.close();
         if(alg == 0) // PageRank
-            solucion(pagerank(m, c, tolerancia), solus_file);
+            solucion(pagerank(p_trans, c, tolerancia), solus_file);
         else 
             ;// in-deg
     }
