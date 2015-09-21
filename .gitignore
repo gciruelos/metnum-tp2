@@ -127,6 +127,8 @@ sympy-plots-for-*.tex/
 
 
 # C++
-.o
+*.o
 
+# Python compilado
+*.pyc
 

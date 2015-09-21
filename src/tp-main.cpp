@@ -2,28 +2,9 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include "problema.h"
 
 
-
-void imprimir_vector(std::vector<double> v){
-    std::cout << "[";
-    for(int i = 0; i<v.size(); i++){
-        std::cout << v[i];
-        if(i!=v.size()-1)
-            std::cout << ", ";
-    }
-    std::cout << "]" << std::endl;
-}
-
-
-int mi_atoi(char * a){
-  if(a[0] == '0') return 0;
-  else if(a[0] == '1') return 1;
-  else if(a[0] == '2') return 2;
-  else if(a[0] == '3') return 3;
-  else return -1;
-}
- 
 
 
 int main(int argc, char * argv[]){
@@ -44,16 +25,17 @@ int main(int argc, char * argv[]){
     input_file >> alg >> c  >> tipo_de_instancia >> red_f >> tolerancia;
     input_file.close();
 
-
     // abrimos el archivo de la red y lo cargamos
-    std::ifstream red_file(red_f);
-    red_file.close();
+    std::cerr << red_f << std::endl;
+    std::ifstream red_file(red_f.c_str(), std::ifstream::in);
     
-
     // ACA YA ESTA TODO LISTO PARA SER USADO
+    std::ofstream solus_file(argv[2], std::ofstream::out);
+
+    resolver(tipo_de_instancia, alg, c, tolerancia, red_file, solus_file);
 
   
-    std::ofstream f_soluciones(argv[2], std::ofstream::out);
+ 
 
  
     return 0;
