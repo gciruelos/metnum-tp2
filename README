@@ -1,0 +1,6 @@
+# metnum-tp2
+metnum-tp2 2c 2015
+
+Correr con
+    
+    ./tp tests/test1.in tests/test1.out 

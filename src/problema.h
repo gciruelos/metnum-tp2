@@ -6,6 +6,7 @@ double dist_1(std::vector<double> v, std::vector<double> w){
     double dist = 0;
     for(uint i = 0; i<v.size(); i++) 
         dist += fabs(v[i] - w[i]);
+    return dist;
 }
 
 double norma_1(std::vector<double> v){
@@ -18,12 +19,10 @@ double norma_1(std::vector<double> v){
 
 std::vector<double> pagerank(Matriz p_trans, double c, double tolerancia){
     // uso el algoritmo 1 de kamvar et al.
-    uint nodes = m.get_nodes();
+    uint nodes = p_trans.get_nodes();
     std::vector<double> x(nodes, 1./nodes), y, v(nodes, 1./nodes);
     double w; 
-    
-
- 
+     
     while(1){
         y = p_trans.multiplicar(x);
         for(uint i = 0; i<y.size(); i++)
@@ -47,6 +46,10 @@ std::vector<double> pagerank(Matriz p_trans, double c, double tolerancia){
 
 template <typename T>
 void solucion(std::vector<T> v, std::ofstream& solus_file){
+    std::cerr << "solucion! ";
+    mostrar_vector(v, std::cerr);
+    std::cerr << std::endl;
+    
     for(uint i = 0; i<v.size(); i++)
         solus_file << v[i] << std::endl;
 }
