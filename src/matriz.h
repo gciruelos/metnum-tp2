@@ -1,4 +1,3 @@
-
 #ifndef MATRIZ_H
 #define MATRIZ_H
 
@@ -26,8 +25,8 @@ void mostrar_vector(std::vector<T> v, std::ostream& o){
     }
     o << "}";
 }
-       
 
+uint first_node = 1;
 
 
 class Matriz {
@@ -62,8 +61,8 @@ public:
         
         for(uint i = 0; i < edges; i++){
              in >> from >> to;
-             // los nodos se numeran desde 1...
-             from--; to--;    
+             // los nodos se numeran desde first_node...
+             from-=first_node; to-=first_node;    
              Ptrans_lil[to].push_back(std::make_pair(from, 1));
              out_degrees[from]++;
              in_degrees[to]++;

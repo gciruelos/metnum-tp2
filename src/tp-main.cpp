@@ -25,8 +25,7 @@ int main(int argc, char * argv[]){
     input_file >> alg >> c  >> tipo_de_instancia >> red_f >> tolerancia;
     input_file.close();
 
-    // abrimos el archivo de la red y lo cargamos
-    std::cerr << red_f << std::endl;
+    // abrimos el archivo de la red y lo cargamos 
     std::ifstream red_file(red_f.c_str(), std::ifstream::in);
     
     // ACA YA ESTA TODO LISTO PARA SER USADO

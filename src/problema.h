@@ -21,9 +21,13 @@ std::vector<double> pagerank(Matriz p_trans, double c, double tolerancia){
     // uso el algoritmo 1 de kamvar et al.
     uint nodes = p_trans.get_nodes();
     std::vector<double> x(nodes, 1./nodes), y, v(nodes, 1./nodes);
-    double w; 
+    double w;
+
+    uint k = 0;
      
     while(1){
+        //std::cerr << "iteracion "<< k++ << std::endl;
+        
         y = p_trans.multiplicar(x);
         for(uint i = 0; i<y.size(); i++)
             y[i] *= c;
@@ -44,11 +48,16 @@ std::vector<double> pagerank(Matriz p_trans, double c, double tolerancia){
 }
 
 
+std::vector<uint> indeg(Matriz p_trans){
+    return p_trans.get_in_degrees();
+}
+
+
 template <typename T>
 void solucion(std::vector<T> v, std::ofstream& solus_file){
-    std::cerr << "solucion! ";
-    mostrar_vector(v, std::cerr);
-    std::cerr << std::endl;
+    //std::cerr << "solucion! ";
+    //mostrar_vector(v, std::cerr);
+    //std::cerr << std::endl;
     
     for(uint i = 0; i<v.size(); i++)
         solus_file << v[i] << std::endl;
@@ -63,9 +72,9 @@ void resolver(int tipo_de_instancia,
 
     
 
-    //if(red_file.good()){
-    //    std::cerr << "ok!" << std::endl;
-   // }
+    if(red_file.good()){
+        std::cerr << "ok!" << std::endl;
+    }
     
     if(tipo_de_instancia == 0){ // PAGINAS WEB
         Matriz p_trans(red_file);
@@ -73,8 +82,8 @@ void resolver(int tipo_de_instancia,
         red_file.close();
         if(alg == 0) // PageRank
             solucion(pagerank(p_trans, c, tolerancia), solus_file);
-        else 
-            ;// in-deg
+        else // in-deg
+            solucion(indeg(p_trans), solus_file);
     }
 
     solus_file.close();
