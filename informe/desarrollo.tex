@@ -2,6 +2,43 @@
 
 \subsection{Métodos numéricos usados}
 
+Como dijimos en la introducción, nuestro objetivo será, dada una matriz de transición $P$, encontrarle un autovector de autovalor asociado igual a 1 a su transpuesta. (Usamos la transpuesta por comodidad notacional).
+
+\[P^t x = x\].
+
+\subsubsection{Método de la potencia}
+El método de la potencia, dada una matriz A, produce un autovalor $\lambda$ y un autovector asociado a $\lambda$, $v$ no nulo. El método es iterativo, y se puede encontrar una mejor explicación sobre él en \cite[Cap. 5.8.1]{dahlquist}. 
+
+El método consiste en tomar un $x^{(0)}$ inicial, y luego construir una sucesión $\{x^{(k)}\}$ de la siguiente manera:
+
+\[x^{(i)} = \frac{A x^{(i-1)}}{||A x^{(i-1)}||}\]
+
+Y entonces, bajo ciertas condiciones, si se toma $k$ lo suficientemente grande, $x^{(k)} \to \overline{x}$, tal que $A\overline{x} = \lambda \overline{x}$, $\lambda$ el autovalor de mayor módulo. Por ello establecemos como criterio de parada que la diferencia entre el vector generado en una iteración y su anterior sea lo suficientemente chica.
+
+Como probamos en \ref{subsub:prop1}, el autovalor de máximo módulo en este caso es 1, pero puede pasar también que $\lambda = -1$ también sea un autovalor, pero comenzando con $x^{(0)} = (\frac1n,..., \frac1n)$ inicial, nos aseguramos de que las entradas sean siempre positivas, consiguiendo así un autovector asociado a autovalor $\lambda = 1$.
+
+\subsubsection{PageRank}
+PageRank será un método, que, dado un grafo cuyos nodos representan páginas webs y sus aristas representan links entre las páginas web, nos permitirá modelar un navegante aleatorio utilizando una cadena de Markov. 
+Los detalles de la construcción de la cadena y la matriz asociada pueden encontrarse en \cite{Brin1998}.
+
+Proveeremos una breve explicación de como se arma la matriz de transición utilizando un vector fila de la matriz $P$. 
+$P_i$ es la $i$-esima fila de la matriz, y su entrada $j$-ésima nos dice la probabilidad que habrá de ir de la página web $i$ a la $j$. A priori una buena aproximación sería
+
+\[ P_{ij} = \begin{cases} 
+      \frac{1}{n_i} & \text{si hay un link de $i$ a $j$} \\
+       0 & \text{si no}
+   \end{cases}
+\] 
+
+Donde $n_i$ es la cantidad de links salientes de la página $i$.
+El primer problema, obvio, es que en general, esta matriz no es de transición, porque si una página web no tiene links salientes, la matriz va a tener toda una fila de ceros. Por eso, en este caso, se agrega una fila que vale toda $(\frac1n, ..., \frac1n)$.
+
+Luego, se introduce el concepto de teletransportación. La idea es que, con una cierta probabilidad $1-c$, el navegante aleatorio puede saltar a cualquier página de toda la red sin importar en cual esté actualmente. Todo esto, nuevamente, esta correctamente explicado en \cite{Brin1998} y \cite{Kamvar2003}.
+
+En este trabajo en particular, utilizaremos una versión mejorada del algoritmo, propuesta por \cite{Kamvar2003}. Este consiste en separar el único paso del método de la potencia en 3 pasos separados, de tal manera de acelerar el cómputo, aprovechandonos de que la matriz de transición (sin agregarle el factor de teletransportación) es esparsa.
+
+\subsubsection{GeM}
+
 \subsection{Estructuración del código}
 
 \subsection{Experimentación}

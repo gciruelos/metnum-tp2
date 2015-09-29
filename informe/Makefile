@@ -13,3 +13,4 @@ clean:
 	rm -f *.bcf
 	rm -f *.blg
 	rm -f *.bbl
+	rm -f tp-blx.bib
