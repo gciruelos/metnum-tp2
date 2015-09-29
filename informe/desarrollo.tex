@@ -37,7 +37,17 @@ Luego, se introduce el concepto de teletransportación. La idea es que, con una 
 
 En este trabajo en particular, utilizaremos una versión mejorada del algoritmo, propuesta por \cite{Kamvar2003}. Este consiste en separar el único paso del método de la potencia en 3 pasos separados, de tal manera de acelerar el cómputo, aprovechandonos de que la matriz de transición (sin agregarle el factor de teletransportación) es esparsa.
 
-\subsubsection{GeM}
+\subsubsection{Método GeM}
+
+El método GeM, propuesto en \cite{Govan2008}, tiene como objetivo adaptar el algoritmo de PageRank para ligas deportivas. La idea es simple, al igual que en algoritmo original de PageRank, la idea es armar una cadena de Markov y modelar un navegante aleatorio.
+
+En este modelo, se representa una temporada (o una fecha, o un periodo de tiempo cualquiera) como un grafo dirigido y pesado, al igual que en el modelo de PageRank. Sin embargo, en este caso, los pesos de la primera matriz no valen 0 o 1, si no que toman el valor del valor absoluto de los puntajes de cada partido.
+
+De esta manera, si el equipo $i$ perdió contra el equipo $j$ por $p$ puntos, en la primera matriz $A$, valdra que $A_{ij} = p$. 
+
+Luego, al igual que en PageRank, las filas de esta matriz que valgan 0 (eso significa que el equipo está invicto hasta el momento) serán completadas y además se agregará el factor de teletransportación, haciendo que todas las entradas de la matriz $P$ sean distintas de 0.
+
+Al igual que antes, nuestro objetivo es encontrar un autovector de autovalor 1 para $P^t$, y para ello utilizaremos el método de la potencia común y corriente.
 
 \subsection{Estructuración del código}
 
