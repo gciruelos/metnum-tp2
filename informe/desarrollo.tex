@@ -6,6 +6,7 @@ Como dijimos en la introducción, nuestro objetivo será, dada una matriz de tra
 
 \[P^t x = x\].
 
+
 \subsubsection{Método de la potencia}
 El método de la potencia, dada una matriz A, produce un autovalor $\lambda$ y un autovector asociado a $\lambda$, $v$ no nulo. El método es iterativo, y se puede encontrar una mejor explicación sobre él en \cite[Cap. 5.8.1]{dahlquist}. 
 
@@ -18,7 +19,7 @@ Y entonces, bajo ciertas condiciones, si se toma $k$ lo suficientemente grande, 
 Como probamos en \ref{subsub:prop1}, el autovalor de máximo módulo en este caso es 1, pero puede pasar también que $\lambda = -1$ también sea un autovalor, pero comenzando con $x^{(0)} = (\frac1n,..., \frac1n)$ inicial, nos aseguramos de que las entradas sean siempre positivas, consiguiendo así un autovector asociado a autovalor $\lambda = 1$.
 
 \subsubsection{PageRank}
-PageRank será un método, que, dado un grafo cuyos nodos representan páginas webs y sus aristas representan links entre las páginas web, nos permitirá modelar un navegante aleatorio utilizando una cadena de Markov. 
+PageRank más que un m\'etodo de cómputo es un m\'etodo de modelado. Dado un grafo cuyos nodos representan páginas webs y sus aristas representan links entre las páginas web, nos permitirá modelar un navegante aleatorio utilizando una cadena de Markov. 
 Los detalles de la construcción de la cadena y la matriz asociada pueden encontrarse en \cite{Brin1998}.
 
 Proveeremos una breve explicación de como se arma la matriz de transición utilizando un vector fila de la matriz $P$. 
@@ -35,7 +36,11 @@ El primer problema, obvio, es que en general, esta matriz no es de transición, 
 
 Luego, se introduce el concepto de teletransportación. La idea es que, con una cierta probabilidad $1-c$, el navegante aleatorio puede saltar a cualquier página de toda la red sin importar en cual esté actualmente. Todo esto, nuevamente, esta correctamente explicado en \cite{Brin1998} y \cite{Kamvar2003}.
 
-En este trabajo en particular, utilizaremos una versión mejorada del algoritmo, propuesta por \cite{Kamvar2003}. Este consiste en separar el único paso del método de la potencia en 3 pasos separados, de tal manera de acelerar el cómputo, aprovechandonos de que la matriz de transición (sin agregarle el factor de teletransportación) es esparsa.
+Luego, puede utilizarse el algoritmo descripto anteriormente para encontrar un autovector de autovalor asociado igual a 1.
+
+En este trabajo en particular, utilizaremos una versión mejorada del m\'etodo de la potencia, adaptada para este problema en particular, propuesta por \cite{Kamvar2003}. Este consiste en separar el único paso del método de la potencia en 3 pasos separados, de tal manera de acelerar el cómputo, aprovechandonos de que la matriz de transición (sin agregarle el factor de teletransportación) es esparsa.
+
+De esta manera, se pueden obtener importantes ganancias en lo que respecta a la performance.
 
 \subsubsection{Método GeM}
 
@@ -49,11 +54,23 @@ Luego, al igual que en PageRank, las filas de esta matriz que valgan 0 (eso sign
 
 Al igual que antes, nuestro objetivo es encontrar un autovector de autovalor 1 para $P^t$, y para ello utilizaremos el método de la potencia común y corriente.
 
+Es importante notar que este m\'etodo es, a diferencia de el anterior, un m\'etodo que nos indica \emph{cómo} modelar, mientras que el m\'etodo propuesto en \cite{Kamvar2003} lo que hace es tomar un modelo conocido e intentar mejorar su velocidad de cómputo.
+
+\subsubsection{Otros m\'etodos}
+
+Además de los m\'etodos mencionados enteriormente, para cada problema (rankeo de páginas web y de ligas deportivas), utilizaremos un m\'etodo alternativo. 
+
+En el caso de las páginas webs será el conocido como IN-DEGREE, que rankea mejor a aquellas páginas que son mas linkeadas y peor a las que son menos linkeadas. En la parte de experimentación se comparará estos m\'etodos con la requerida profundidad.
+
+En el caso de los rankings de ligas deportivas, utilizaremos el m\'etodo standard de rankeo de cada deporte. En el caso del fútbol, este consiste en caso de empate un punto a cada equipo, y en otro caso darle 3 puntos al equipo ganador y 0 al perdedor.
+
+
 \subsection{Estructuración del código}
 Para el modelado del problema diseñamos tres módulos: Matriz, MatrizDep y Problema. 
 
+
 \subsubsection{Matriz}
-El módulo matriz es el que se usará para representar a las matrices de conectividad de redes de páginas web.
+El módulo Matriz es el que se usará para representar a las matrices de conectividad de redes de páginas web.
 \paragraph{Representación interna}
 
 Como la matriz de conectividad es en general esparsa (dado que cada página web se conecta en proporción con muy pocas páginas), es conveniente utilizar una representación que aproveche esto. Para eso, vamos a usar una representación conocida como Compressed Row Storage (CRS). Para más información sobre este formato puede consultarse \cite{CRS}.
@@ -68,57 +85,52 @@ La interfaz de Matriz provee las siguientes operaciones:\footnote{Cuando se escr
 \begin{itemize}
     \item Matriz(\textbf{ifstream\&} in): constructor de la matriz. Recibe un archivo abierto del cual parseará todos los datos que necesita, en el formato adecuado (SNAP).
 
-    \item \textbf{vector<double>} multiplicar(\textbf{vector<double>} x): autoexplicativa. Devuelve el resultado del producto $Ax$, donde $A$ es la matriz de la clase. El algoritmo que utilizamos es el standard para multiplicar por matrices representadas en CRS, y además, como dijimos anteriormente, dividimos cada entrada por la cantidad de nodos salientes del nodo que corresponda.
+    \item \textbf{vector<double>} multiplicar(\textbf{vector<double>} x): El propósito de esta función es autoexplicativo. Devuelve el resultado del producto $Ax$, donde $A$ es la matriz de la clase. El algoritmo que utilizamos es el standard para multiplicar por matrices representadas en CRS, y además, como dijimos anteriormente, dividimos cada entrada por la cantidad de nodos salientes del nodo que corresponda.
 \end{itemize}
 
 \subsubsection{MatrizDep}
 El módulo MatrizDep es el que se usará para representar a las matrices de conectividad de ligas deportivas.
+
 \paragraph{Representación interna}
 
-Como la matriz de conectividad en este caso, a diferencia del anterior, no suele ser esparsa (de hecho, en el caso general podría aproximarse bastante al grafo completo), entonces no fue necesario utilizar ninguna estructura compleja, y utilizamos simplemente la clásica representación de vector de vectores. Además fue necesario utilizar otra estructura para almacenar los puntajes de acuerdo a otros métodos de rankeo (por ejemplo, el standard) de la liga deportiva correspondiente.
+Como la matriz de conectividad en este caso, a diferencia del anterior, no suele ser esparsa (de hecho, en el caso general podría aproximarse bastante al grafo completo), entonces no fue necesario utilizar ninguna estructura compleja, y utilizamos simplemente la clásica representación de vector de vectores.
 
-Elegimos este formato porque será especialmente cómodo a la hora de hacer el producto iterativo del método de la potencia, dado que si queremos hacer $P^tx$, es conveniente poder acceder a $P^t$ por filas fácilmente. 
-
-Además, nos guardamos la cantidad de links que entran y salen de cada nodo. El primer dato será util para calcular la métrica IN-DEGREE, y el segundo dato será util para saber cuánto valdra $P^t_{ij}$, dado que es $\frac{1}{n_j}$, donde $n_j$ es la cantidad de nodos salientes del nodo $j$.
+Además fue necesario utilizar otra estructura para almacenar los puntajes de acuerdo a otros métodos de rankeo (por ejemplo, el standard) de la liga deportiva correspondiente.
 
 \paragraph{Interfaz}
-La interfaz de Matriz provee las siguientes operaciones:\footnote{Cuando se escribe la aridad de la función la misma puede no coincidir con la notación usada en C++. Esto está bien pues lo único que se busca aquí es dar una orientación de lo que hace cada función y no código preciso.}
 
+La interfaz de MatrizDep provee las siguientes operaciones:
 \begin{itemize}
-    \item Matriz(\textbf{ifstream\&} in): constructor de la matriz. Recibe un archivo abierto del cual parseará todos los datos que necesita, en el formato adecuado (SNAP).
+    \item MatrizDep(\textbf{ifstream\&} in): constructor de la matriz. Recibe un archivo abierto del cual parseará todos los datos que necesita, en el formato adecuado (el explicitado en el tp).
 
-    \item \textbf{vector<double>} multiplicar(\textbf{vector<double>} x): autoexplicativa. Devuelve el resultado del producto $Ax$, donde $A$ es la matriz de la clase. El algoritmo que utilizamos es el standard para multiplicar por matrices representadas en CRS, y además, como dijimos anteriormente, dividimos cada entrada por la cantidad de nodos salientes del nodo que corresponda.
+    \item \textbf{vector<double>} multiplicar(\textbf{vector<double>} x): autoexplicativa. Devuelve el resultado del producto $Ax$, donde $A$ es la matriz de la clase. El algoritmo que utilizamos es el común y corriente, el mismo que se utiliza al hacer cuentas a mano con matrices.
 \end{itemize}
 
 
-\subsubsection{Sistema}
-Sistema es un módulo que engloba todo lo relacionado al modelado.
 
-\paragraph{Representación interna}
-Se almacenan varios valores: la cantidad de radios y ángulos de la discretización ($m\_mas\_uno\_$ y $n\_$), y el radio interno, el externo, $\Delta r$ y $\Delta\theta$. Se guarda un puntero a la matriz asociada al sistema de ecuaciones, $A$. $bs$ es un vector cuyos elementos a su vez son vectores, uno por cada instancia del problema que el usuario haya pasado. En $soluciones$ se guardarán los vectores solución del sistema para cada instancia.
+
+\subsubsection{Problema}
+Problema es un módulo que engloba todo lo relacionado al modelado y a la resolución de cada caso particular.
+
+
 Adicionalmente, tenemos algunas funciones auxiliares: 
 
-\begin{itemize}
-    \item $col\_matriz$ que permite obtener dados $k,j$ la posición de la variable $t_{k,j}$ en el orden que les dimos (realizando la operación (\ref{eq:calor}));
-    \item \textbf{double} $resolver\_isoterma$(\textbf{vector<double>} radios, \textbf{double} isoterma, \textbf{double} eps = 0.0001): $radios$ tiene la temperatura en cada radio sobre un ángulo fijo, $isoterma$ es el valor de la isoterma buscada, y $eps$ es un parámetro \textit{hardcodeado} que define el error que se tiene en cuenta para realizar una comparación en el caso extremo en que la isoterma buscada no se encuentre entre ningún par de radios, es decir, que el radio buscado es menor que $r_i$ o mayor que $r_e$). Por decisión, en estos casos devolvemos $r_i$ o $r_e$ según la temperatura interior sea mayor que la isoterma buscada o no respectivamente. Sino, lo que devolvemos es la distancia desde el centro del horno hasta el punto donde estimamos se encuentra la isoterma (usando el ajuste lineal explicado en sección (\ref{sec:metodos})).
-    \item Tres funciones que nos dan 3 criterios para decidir si el sistema está en peligro o no, dado un vector que tiene la posición de la isoterma en cada ángulo: mediana, promedio y máximo. 
-\end{itemize}
-
 \paragraph{Interfaz}
-La interfaz de Sistema provee las siguientes operaciones:\footnote{Cuando se escribe la aridad de la función la misma puede no coincidir con la notación usada en C++. Esto está bien pues lo único que se busca aquí es dar una orientación de lo que hace cada función y no código preciso.}
+
+La interfaz de Problema provee funciones utilizadas tanto para el modelado de rankings de páginas web como para el modelado de rankings en ligas deportivas.
+
+Las siguientes operaciones en lo que concierne a la resolución de problemas relacionados con el modelado de páginas web:\footnote{Cuando se escribe la aridad de la función la misma puede no coincidir con la notación usada en C++. Esto está bien pues lo único que se busca aquí es dar una orientación de lo que hace cada función y no código preciso.}
 
 \begin{itemize}
-    \item Sistema(\textbf{double} r\_i,
-                    \textbf{double} r\_e,
-          \textbf{int} m\_mas\_uno,
-          \textbf{int} n,
-          \textbf{vector<vector<double$>$>} interiores,
-          \textbf{vector<vector<double$>$>} exteriores) :
-        constructor del sistema. Cada vector de interiores es una medición de las temperaturas interiores en una determinada instancia (la cual está dada por la posición de la medición en interiores). exteriores es análogo a interiores para las mediciones de temperaturas exteriores. En una primera etapa inicializa los atributos de tipo double. Luego, arma A y bs.
+    \item  \textbf{vector<double>} pagerank(\textbf{Matriz} p\_trans, \textbf{double} c, \textbf{double} tolerancia) :
+        Se ocupa de aplicar el algoritmo de PageRank sobre la matriz \texttt{p\_trans}, utilizando el algoritmo descripto por \cite[Algoritmo 1]{Kamvar2003}. Además, se testea luego de cada iteración si la diferencia (en norma 1\footnote{$||x||_1 = \sum_i |x_i|$}) es menor que la tolerancia. En ese caso, se termina de iterar y se considera que el vector resultante de la iteración actual es el resultado. 
           
-  \item \textbf{void} solve(\textbf{ofstream\&} f\_soluciones, \textbf{metodo} met):  toma como parámetros un archivo de salida donde imprimirá las soluciones del sistema con el formato solicitado por la cátedra, y un metodo, que es un tipo numerado definido por nosotros que puede tomar cuatro valores: ELIM\_GAUSSIANA, \mbox{FACTORIZACION\_LU,} ELIM\_GAUSSIANA\_BANDA, FACTORIZACION\_LU\_BANDA. El método escogido será el que se use para resolver el sistema.
+    \item \textbf{vector<uint>} indeg(\textbf{Matriz} p\_trans):  Devuelve el resultado de aplicarle el m\'etodo de rankeo indegree a la red del problema.
 
-  \item \textbf{void} isotermas(\textbf{ofstream\&} f\_isotermas, \textbf{double} isoterma): toma un archivo de salida en el que imprimirá la lista de las posiciones de la isoterma buscada para ángulo. La forma en la que trabaja consiste en iterar sobre todos los ángulos y para cada uno llamar a la auxiliar resolver\_isoterma, y posteriormente imprimir el resultado.   
+A continuación siguen los m\'etodos utilizados para el modelado de rankings de ligas deportivas
+
+  \item \textbf{vector<double>} metodopot(\textbf{MatrizDep} p, \textbf{double} tolerancia):
+      M\'etodo de la potencia \emph{vanilla}. Es el que se utilizará para resolver el problema de las ligas deportivas. Obtiene una sucesión de vectores, y cuando su diferencia de norma 1 es menor que la tolerancia pasada como parámetro se termina de iterar.   
 
 \end{itemize}
 
