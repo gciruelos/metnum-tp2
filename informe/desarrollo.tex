@@ -50,6 +50,77 @@ Luego, al igual que en PageRank, las filas de esta matriz que valgan 0 (eso sign
 Al igual que antes, nuestro objetivo es encontrar un autovector de autovalor 1 para $P^t$, y para ello utilizaremos el método de la potencia común y corriente.
 
 \subsection{Estructuración del código}
+Para el modelado del problema diseñamos tres módulos: Matriz, MatrizDep y Problema. 
+
+\subsubsection{Matriz}
+El módulo matriz es el que se usará para representar a las matrices de conectividad de redes de páginas web.
+\paragraph{Representación interna}
+
+Como la matriz de conectividad es en general esparsa (dado que cada página web se conecta en proporción con muy pocas páginas), es conveniente utilizar una representación que aproveche esto. Para eso, vamos a usar una representación conocida como Compressed Row Storage (CRS). Para más información sobre este formato puede consultarse \cite{CRS}.
+
+Elegimos este formato porque será especialmente cómodo a la hora de hacer el producto iterativo del método de la potencia, dado que si queremos hacer $P^tx$, es conveniente poder acceder a $P^t$ por filas fácilmente. 
+
+Además, nos guardamos la cantidad de links que entran y salen de cada nodo. El primer dato será util para calcular la métrica IN-DEGREE, y el segundo dato será util para saber cuánto valdra $P^t_{ij}$, dado que es $\frac{1}{n_j}$, donde $n_j$ es la cantidad de nodos salientes del nodo $j$.
+
+\paragraph{Interfaz}
+La interfaz de Matriz provee las siguientes operaciones:\footnote{Cuando se escribe la aridad de la función la misma puede no coincidir con la notación usada en C++. Esto está bien pues lo único que se busca aquí es dar una orientación de lo que hace cada función y no código preciso.}
+
+\begin{itemize}
+    \item Matriz(\textbf{ifstream\&} in): constructor de la matriz. Recibe un archivo abierto del cual parseará todos los datos que necesita, en el formato adecuado (SNAP).
+
+    \item \textbf{vector<double>} multiplicar(\textbf{vector<double>} x): autoexplicativa. Devuelve el resultado del producto $Ax$, donde $A$ es la matriz de la clase. El algoritmo que utilizamos es el standard para multiplicar por matrices representadas en CRS, y además, como dijimos anteriormente, dividimos cada entrada por la cantidad de nodos salientes del nodo que corresponda.
+\end{itemize}
+
+\subsubsection{MatrizDep}
+El módulo MatrizDep es el que se usará para representar a las matrices de conectividad de ligas deportivas.
+\paragraph{Representación interna}
+
+Como la matriz de conectividad en este caso, a diferencia del anterior, no suele ser esparsa (de hecho, en el caso general podría aproximarse bastante al grafo completo), entonces no fue necesario utilizar ninguna estructura compleja, y utilizamos simplemente la clásica representación de vector de vectores. Además fue necesario utilizar otra estructura para almacenar los puntajes de acuerdo a otros métodos de rankeo (por ejemplo, el standard) de la liga deportiva correspondiente.
+
+Elegimos este formato porque será especialmente cómodo a la hora de hacer el producto iterativo del método de la potencia, dado que si queremos hacer $P^tx$, es conveniente poder acceder a $P^t$ por filas fácilmente. 
+
+Además, nos guardamos la cantidad de links que entran y salen de cada nodo. El primer dato será util para calcular la métrica IN-DEGREE, y el segundo dato será util para saber cuánto valdra $P^t_{ij}$, dado que es $\frac{1}{n_j}$, donde $n_j$ es la cantidad de nodos salientes del nodo $j$.
+
+\paragraph{Interfaz}
+La interfaz de Matriz provee las siguientes operaciones:\footnote{Cuando se escribe la aridad de la función la misma puede no coincidir con la notación usada en C++. Esto está bien pues lo único que se busca aquí es dar una orientación de lo que hace cada función y no código preciso.}
+
+\begin{itemize}
+    \item Matriz(\textbf{ifstream\&} in): constructor de la matriz. Recibe un archivo abierto del cual parseará todos los datos que necesita, en el formato adecuado (SNAP).
+
+    \item \textbf{vector<double>} multiplicar(\textbf{vector<double>} x): autoexplicativa. Devuelve el resultado del producto $Ax$, donde $A$ es la matriz de la clase. El algoritmo que utilizamos es el standard para multiplicar por matrices representadas en CRS, y además, como dijimos anteriormente, dividimos cada entrada por la cantidad de nodos salientes del nodo que corresponda.
+\end{itemize}
+
+
+\subsubsection{Sistema}
+Sistema es un módulo que engloba todo lo relacionado al modelado.
+
+\paragraph{Representación interna}
+Se almacenan varios valores: la cantidad de radios y ángulos de la discretización ($m\_mas\_uno\_$ y $n\_$), y el radio interno, el externo, $\Delta r$ y $\Delta\theta$. Se guarda un puntero a la matriz asociada al sistema de ecuaciones, $A$. $bs$ es un vector cuyos elementos a su vez son vectores, uno por cada instancia del problema que el usuario haya pasado. En $soluciones$ se guardarán los vectores solución del sistema para cada instancia.
+Adicionalmente, tenemos algunas funciones auxiliares: 
+
+\begin{itemize}
+    \item $col\_matriz$ que permite obtener dados $k,j$ la posición de la variable $t_{k,j}$ en el orden que les dimos (realizando la operación (\ref{eq:calor}));
+    \item \textbf{double} $resolver\_isoterma$(\textbf{vector<double>} radios, \textbf{double} isoterma, \textbf{double} eps = 0.0001): $radios$ tiene la temperatura en cada radio sobre un ángulo fijo, $isoterma$ es el valor de la isoterma buscada, y $eps$ es un parámetro \textit{hardcodeado} que define el error que se tiene en cuenta para realizar una comparación en el caso extremo en que la isoterma buscada no se encuentre entre ningún par de radios, es decir, que el radio buscado es menor que $r_i$ o mayor que $r_e$). Por decisión, en estos casos devolvemos $r_i$ o $r_e$ según la temperatura interior sea mayor que la isoterma buscada o no respectivamente. Sino, lo que devolvemos es la distancia desde el centro del horno hasta el punto donde estimamos se encuentra la isoterma (usando el ajuste lineal explicado en sección (\ref{sec:metodos})).
+    \item Tres funciones que nos dan 3 criterios para decidir si el sistema está en peligro o no, dado un vector que tiene la posición de la isoterma en cada ángulo: mediana, promedio y máximo. 
+\end{itemize}
+
+\paragraph{Interfaz}
+La interfaz de Sistema provee las siguientes operaciones:\footnote{Cuando se escribe la aridad de la función la misma puede no coincidir con la notación usada en C++. Esto está bien pues lo único que se busca aquí es dar una orientación de lo que hace cada función y no código preciso.}
+
+\begin{itemize}
+    \item Sistema(\textbf{double} r\_i,
+                    \textbf{double} r\_e,
+          \textbf{int} m\_mas\_uno,
+          \textbf{int} n,
+          \textbf{vector<vector<double$>$>} interiores,
+          \textbf{vector<vector<double$>$>} exteriores) :
+        constructor del sistema. Cada vector de interiores es una medición de las temperaturas interiores en una determinada instancia (la cual está dada por la posición de la medición en interiores). exteriores es análogo a interiores para las mediciones de temperaturas exteriores. En una primera etapa inicializa los atributos de tipo double. Luego, arma A y bs.
+          
+  \item \textbf{void} solve(\textbf{ofstream\&} f\_soluciones, \textbf{metodo} met):  toma como parámetros un archivo de salida donde imprimirá las soluciones del sistema con el formato solicitado por la cátedra, y un metodo, que es un tipo numerado definido por nosotros que puede tomar cuatro valores: ELIM\_GAUSSIANA, \mbox{FACTORIZACION\_LU,} ELIM\_GAUSSIANA\_BANDA, FACTORIZACION\_LU\_BANDA. El método escogido será el que se use para resolver el sistema.
+
+  \item \textbf{void} isotermas(\textbf{ofstream\&} f\_isotermas, \textbf{double} isoterma): toma un archivo de salida en el que imprimirá la lista de las posiciones de la isoterma buscada para ángulo. La forma en la que trabaja consiste en iterar sobre todos los ángulos y para cada uno llamar a la auxiliar resolver\_isoterma, y posteriormente imprimir el resultado.   
+
+\end{itemize}
 
 \subsection{Experimentación}
 
