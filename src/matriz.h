@@ -53,27 +53,28 @@ public:
         // de pares <columna, valor>
         std::vector<std::vector<std::pair<uint, int> > > Ptrans_lil(nodes, 
                 std::vector<std::pair<uint,int> > ());
-
+  
         for(uint i = 0; i < nodes; i++){
             out_degrees.push_back(0);
             in_degrees.push_back(0);
         }
-        
+
         for(uint i = 0; i < edges; i++){
              in >> from >> to;
              // los nodos se numeran desde first_node...
-             from-=first_node; to-=first_node;    
+             from-=first_node; to-=first_node;     
              Ptrans_lil[to].push_back(std::make_pair(from, 1));
              out_degrees[from]++;
-             in_degrees[to]++;
+             in_degrees[to]++; 
         }
-       
+ 
         // http://netlib.org/linalg/html_templates/node91.html   CRS
         // https://de.wikipedia.org/wiki/Compressed_Row_Storage  esta en aleman
         // pero tiene lindos dibujitos
         // itero sobre las filas, voy a ir completando [val], col_ind y row_ptr
         row_ptr.push_back(0);
         for(uint i = 0; i < Ptrans_lil.size(); i++){
+        
             std::vector<std::pair<uint, int> > fila_i = Ptrans_lil[i];
             std::sort(fila_i.begin(), fila_i.end(), fst_comp);
             for(uint j = 0; j < fila_i.size(); j++){
@@ -96,7 +97,7 @@ public:
         uint fila_actual = 0;
         uint accum = 0;
         for(uint i = 0; i < nnz; i++){ 
-            if(i == row_ptr[fila_actual+1]){ //termine esta fila 
+            while(i == row_ptr[fila_actual+1]){ //termine esta fila 
                 fila_actual++;
                 accum = 0;
             }

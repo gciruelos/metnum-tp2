@@ -1,0 +1,70 @@
+Ahora procederemos a analizar, experimentar y discutir los métodos que conciernen al rankeo de páginas Web. Recordemos que en este trabajo se utilizó el modelo PageRank para modelar el rankeo de páginas web utilizando cadenas de Markov y se implementó una versión optimizada especialmente para este problema, presentada en \cite{Kamvar2003}
+
+\subsubsection{Convergencia y rendimiento de PageRank}
+Para los experimentos de velocidad de convergencia y rendimiento en general de PageRank utilizamos los datasets de \cite{SNAP}. Para eso, elegimos tres datasets de diferentes tamaños y coeficiente de conectividad \footnote{Con esto nos referimos a que tan conectado está el grafo, esto puede medirse por ejemplo como $\frac{2e}{v(v-1)}$, donde $e$ son las aristas del grafo y $v$ los vertices, dado que el grafo completo tiene $\frac{v(v-1)}{2}$ aristas.}, web-Stanford, web-NotreDame y web-Google.
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{| c | c | c |}
+  \hline
+  Dataset & Vértices & Aristas \\ \hline \hline
+  web-Stanford & 281.903 & 2.312.497 \\ \hline
+  web-NotreDame & 325.729 & 1.497.134 \\ \hline
+  web-Google & 916.428 & 5.105.039 \\ \hline
+\end{tabular}
+\end{figure}
+
+
+Lo primero que se puede decir de este Datasets es que la diferencia de cantidad de vértices de cada uno nos va a permitir analizar como varía según el tamaño de la red. 
+
+Además, notemos como el dataset web-Stanford está mucho más conectado que el dataset web-NotreDame, dado que tiene menos vértices pero más aristas. Creemos que esto va a impactar negativamente en la performance, dado que sobre una red poco conectada el algoritmo va a converger más rápido.
+
+Eso se puede notar vácilmente si se piensa en el grafo que es totalmente disconexo. En ese caso, todas las entradas de la matriz van a valer $\frac1n$, y el método de la potencia va a converger en un paso.
+
+Otra cosa que podemos pronosticar (en parte porque en \cite{Kamvar2003} pasa eso) es que a más cercano sea $c$ a 1 (es decir, el navegante aleatorio se teletransporte menos), más lento va a converger.
+
+Al igual que antes, para entender intuitivamente que está pasando, podemos analizar el caso extremo $c = 0$. En este caso, la probabilidad de que el navegante se teletransporte es siempre 1, por lo que volvemos al caso anterior en el que todos los coeficientes de la matriz van a valer $\frac1n$, por lo que se convergerá en un paso.
+
+Concluidas las hipótesis de los experimentos relacionados a la convergencia del método, procedamos a ver los resultados de los experimentos.
+
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{imgs/convergencia-stanford.png}
+  \caption{\footnotesize{Comparación de la velocidad de convergencia del el método para el dataset web-Stanford.}}
+  \label{fig:conv1}
+\end{minipage}
+\hspace{0.02\textwidth}
+\begin{minipage}{0.48\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{imgs/convergencia-notredame.png}
+  \caption{\footnotesize{Comparación de la velocidad de convergencia del el método para el dataset web-NotreDame.}}
+  \label{fig:conv2}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{imgs/convergencia-google.png}
+  \caption{\footnotesize{Comparación de la velocidad de convergencia del el método para el dataset web-Google.}}
+  \label{fig:conv3}
+\end{minipage}
+\end{figure}
+
+
+Primero notemos algo más o menos sorprendente: la cantidad de iteraciones requeridas por el método no varía demasiado, sobre todo para valores chicos de $c$. Creemos que esto se debe a propiedades generales del método de la potencia, que sin embargo son díficiles de analizar y están fuera del alcance de este trabajo.
+
+Se puede notar además que para los valores más pequeños de $c$ la cantidad de iteraciones para cada dataset es prácticamente igual.
+
+Una cosa importante que decir, de la cual vamos a hablar más en profundidad más adelante es que, aunque la cantidad de iteraciones sea parecida, el costo de cada iteración es mayor a más grande es la matriz y a más valores diferentes de 0 tiene, por lo que las figuras \ref{fig:conv1}, \ref{fig:conv2} y \ref{fig:conv3} no deben intepretarse como el tiempo que requiere el algoritmo para correr.
+
+Sin embargo, una cosa interesante a analizar es qué $c$ usar. Como vimos, usar un $c$ pequeño disminuye el tiempo de cómputo requerido. Sin embargo, disminuir el $c$ también puede impactar el resultado, dado que el factor de teletransportación $1-c$ es más alto, de alguna manera el resultado es menos significativo, dado que se hace más uniforme, como explicamos antes. 
+En \cite{Chakrabarti}, por ejemplo, se sugiere que $c$ debería ser elegido basado en la conectividad del grafo.
+
+
+Otro experimento
+
+
+
+
+

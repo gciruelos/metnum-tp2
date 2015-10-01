@@ -27,12 +27,13 @@ std::vector<double> pagerank(Matriz p_trans, double c, double tolerancia){
     double w;
 
     uint k = 0;
+
+    std::vector<double> iters;
      
     while(1){
-        //std::cerr << "iteracion "<< k++ << std::endl;        
-        mostrar_vector(x, std::cout);
-        std::cerr << std::endl;
-        usleep(100000);
+        std::cerr << "iteracion "<< k++ << std::endl;        
+        //mostrar_vector(x, std::cout);
+        //std::cerr << std::endl; 
         y = p_trans.multiplicar(x);
         for(uint i = 0; i<y.size(); i++)
             y[i] *= c;
@@ -44,9 +45,13 @@ std::vector<double> pagerank(Matriz p_trans, double c, double tolerancia){
 
         // si la distancia entre Ax y x es menor a tolerancia, terminamos
         // si no, seguimos
-        std::cerr << dist_1(x,y) <<std::endl;
-        if(dist_1(x,y) < tolerancia)
+        iters.push_back(dist_1(x,y)); 
+        
+        if(dist_1(x,y) < tolerancia){
+            mostrar_vector(iters, std::cout);
+            std::cout << std::endl;
             return y;
+        }
         else
             x = y;
     }
@@ -104,7 +109,7 @@ void resolver(int tipo_de_instancia,
     
     if(tipo_de_instancia == 0){ // PAGINAS WEB
         Matriz p_trans(red_file);
-        p_trans.mostrar();
+        //p_trans.mostrar();
         red_file.close();
         if(alg == 0) // PageRank
             solucion(pagerank(p_trans, c, tolerancia), solus_file);

@@ -18,16 +18,19 @@ public:
         uint fecha, equipo1, goles1, equipo2, goles2; 
         uint nodes, edges;
 
+
         char numeral; std::string dummy;
         
         in >> nodes >> edges; // leo nodos y edges 
         
         std::vector<std::vector<double> >  h;
+
         // armo la matriz
         for(uint i = 0; i<nodes; i++){
             h.push_back(std::vector<double>(nodes, 0));
             m.push_back(std::vector<double>(nodes, 0));
         }
+
 
         for(uint i = 0; i < edges; i++){
              in >> fecha >> equipo1 >> goles1 >> equipo2 >> goles2;
@@ -73,10 +76,11 @@ public:
         }
 
 
+        /*
         for(int i = 0; i<nodes; i++){
             mostrar_vector(m[i], std::cerr);
             std::cerr << std::endl;
-        }
+        }*/
 
         std::cerr << "listo" << std::endl;
     }
