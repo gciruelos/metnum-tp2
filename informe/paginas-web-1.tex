@@ -19,13 +19,13 @@ Lo primero que se puede decir de este Datasets es que la diferencia de cantidad 
 
 Además, notemos como el dataset web-Stanford está mucho más conectado que el dataset web-NotreDame, dado que tiene menos vértices pero más aristas. Creemos que esto va a impactar negativamente en la performance, dado que sobre una red poco conectada el algoritmo va a converger más rápido.
 
-Eso se puede notar vácilmente si se piensa en el grafo que es totalmente disconexo. En ese caso, todas las entradas de la matriz van a valer $\frac1n$, y el método de la potencia va a converger en un paso.
+Eso se puede notar fácilmente si se piensa en el grafo que es totalmente disconexo. En ese caso, todas las entradas de la matriz van a valer $\frac1n$, y el método de la potencia va a converger en un paso.
 
-Otra cosa que podemos pronosticar (en parte porque en \cite{Kamvar2003} pasa eso) es que a más cercano sea $c$ a 1 (es decir, el navegante aleatorio se teletransporte menos), más lento va a converger.
+Otra cosa que podemos pronosticar (en parte porque en \cite{Kamvar2003} pasa eso) es que entre más cercano sea $c$ a 1 (es decir, el navegante aleatorio se teletransporta menos), más lento va a converger.
 
 Al igual que antes, para entender intuitivamente que está pasando, podemos analizar el caso extremo $c = 0$. En este caso, la probabilidad de que el navegante se teletransporte es siempre 1, por lo que volvemos al caso anterior en el que todos los coeficientes de la matriz van a valer $\frac1n$, por lo que se convergerá en un paso.
 
-Concluidas las hipótesis de los experimentos relacionados a la convergencia del método, procedamos a ver los resultados de los experimentos.
+Concluidas las hipótesis relacionados a la convergencia del método, procedamos a ver los resultados de los experimentos.
 
 
 \begin{figure}[H]
@@ -54,11 +54,11 @@ Concluidas las hipótesis de los experimentos relacionados a la convergencia del
 
 Primero notemos algo más o menos sorprendente: la cantidad de iteraciones requeridas por el método no varía demasiado, sobre todo para valores chicos de $c$. Creemos que esto se debe a propiedades generales del método de la potencia, que sin embargo son díficiles de analizar y están fuera del alcance de este trabajo.
 
-Se puede notar además que para los valores más pequeños de $c$ la cantidad de iteraciones para cada dataset es prácticamente igual.
+Se puede notar además que para los valores más pequeños de $c$ la cantidad de iteraciones correspondientes a cada dataset es prácticamente igual.
 
-Una cosa importante que decir, de la cual vamos a hablar más en profundidad más adelante es que, aunque la cantidad de iteraciones sea parecida, el costo de cada iteración es mayor a más grande es la matriz y a más valores diferentes de 0 tiene, por lo que las figuras \ref{fig:conv1}, \ref{fig:conv2} y \ref{fig:conv3} no deben intepretarse como el tiempo que requiere el algoritmo para correr.
+Una cosa importante para decir, de la cual vamos a hablar en profundidad más adelante, es que aunque la cantidad de iteraciones sea parecida, el costo de cada iteración es mayor a más grande es la matriz y a más valores no nulos tiene, por lo que las figuras \ref{fig:conv1}, \ref{fig:conv2} y \ref{fig:conv3} no deben intepretarse como el tiempo que requiere el algoritmo para correr.
 
-Sin embargo, una cosa interesante a analizar es qué $c$ usar. Como vimos, usar un $c$ pequeño disminuye el tiempo de cómputo requerido. Sin embargo, disminuir el $c$ también puede impactar el resultado, dado que el factor de teletransportación $1-c$ es más alto, de alguna manera el resultado es menos significativo, dado que se hace más uniforme, como explicamos antes. 
+Sin embargo, una cosa interesante a analizar es qué $c$ usar. Como vimos, usar un $c$ pequeño disminuye el tiempo de cómputo requerido. Sin embargo, disminuir el $c$ también puede impactar en el resultado. Dado que el factor de teletransportación $1-c$ es más alto, de alguna manera el resultado es menos significativo, debido a que se hace más uniforme, como explicamos antes. 
 En \cite{Chakrabarti}, por ejemplo, se sugiere que $c$ debería ser elegido basado en la conectividad del grafo.
 
 
@@ -96,7 +96,7 @@ A continuación analizaremos el rendimiento del algoritmo de PageRank implementa
 \end{figure}
 
 Podríamos empezar a sacar conclusiones apresuradas sobre estos datos, pero para que sean más significativos, preferimos realizar otro experimento antes de comenzar el análisis.
-Este experimento consiste en dividir el algoritmo en 2: primero el armado de la matriz (que recordemos que como representamos la matriz en CRS este no es un paso trivial) y luego el paso de método de la potencia optimizado presentado en \cite{Kamvar2003}.
+Este experimento consiste en dividir el algoritmo en 2: primero el armado de la matriz (recordemos que como representamos la matriz en CRS este no es un paso trivial) y luego el paso de método de la potencia optimizado presentado en \cite{Kamvar2003}.
 
 Esto nos permitirá ver mejor el problema y tener datos más detallados, con el objetivo de poder analizar mejor que es lo que sucede.
 
@@ -117,13 +117,13 @@ Esto nos permitirá ver mejor el problema y tener datos más detallados, con el 
 
 Ahora, teniendo toda la información que nos proveen la figura \ref{fig:tiempos1}, \ref{fig:tiempos2} y los experimentos de la sección anterior, podemos hacer un análisis completo y riguroso.
 
-Podemos concluir primero que el paso más costoso del algoritmo es el método de la potencia. Justamente por eso \cite{Kamvar2003} se ocupa de intentar optimizar ese paso, dado optimizarlo va a impactar fuertemente en el rendimiento general de la aplicación.
+Podemos concluir primero que el paso más costoso del algoritmo es el método de la potencia. Justamente por eso \cite{Kamvar2003} se ocupa de intentar optimizar ese paso, dado que optimizarlo va a impactar fuertemente en el rendimiento general de la aplicación.
 
 
-Otro aspecto interesante para ver, es como, aunque las iteraciones requeridas para cada dataset son bastante similares, el costo de cada operación es muy distinto, dado que el tamañod e los vectores es distinto, y las entradas no nulas de la matriz son distintas. 
+Otro aspecto interesante para ver es, como aunque las iteraciones requeridas para cada dataset son bastante similares, el costo de cada operación es muy distinto, pues el tamaño de los vectores varía, y las entradas no nulas de la matriz son distintas. 
 
-De hecho, este experimento nos permite confirmar que el paso más costoso es realizar el producto de la matriz y el vector $P^t x^{(k)}$, dado que se puede ver como el método de la potencia en el caso de web-NotreDame tarda menos que en el caso de web-Stanford, aunque los vectores sean más largos. 
+De hecho, este experimento nos permite confirmar que el paso más costoso es realizar el producto de la matriz y el vector $P^t x^{(k)}$, ya que se puede ver como el método de la potencia en el caso de web-NotreDame tarda menos que en el caso de web-Stanford, aunque los vectores sean más largos. 
 
-Esto se debe a que la matriz de web-NotreDame es más esparsa, y multiplicar $Ax$ con $A$ representada en CRS como en nuestro caso es lineal en la cantidad de elementos no nulos de la matriz. La cantidad de elementos no nulos de la matriz está intimamente relacionada con la cantidad de aristas del grafo. De esta manera se explica fácilmente el comportamiento a priori extraño de el algoritmo sobre estos datasets.
+Esto se debe a que la matriz de web-NotreDame es más esparsa, y al multiplicar $Ax$ con $A$ representada en CRS, el costo resulta lineal en la cantidad de elementos no nulos de la matriz. Esta última está intimamente relacionada con la cantidad de aristas del grafo. De esta manera se explica fácilmente el comportamiento a priori extraño de el algoritmo sobre estos datasets.
 
 
