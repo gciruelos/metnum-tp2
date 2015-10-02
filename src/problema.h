@@ -3,6 +3,9 @@
 #include <unistd.h>
 
 
+bool fst_comp_dec(const std::pair<double, std::string>& a, const std::pair<double,std::string>& b) {
+      return a.first > b.first;
+}
 
 // la distancia basada en norma 1
 double dist_1(std::vector<double> v, std::vector<double> w){
@@ -118,10 +121,30 @@ void resolver(int tipo_de_instancia,
     } else { // LIGAS DEPORTIVAS
         MatrizDep h_trans(red_file, c);
         red_file.close();
-        if(alg == 0) // GeM
-            solucion(metodopot(h_trans, tolerancia), solus_file);
-        else // to be decided
-            ;
+				std::vector<double> res;
+        if(alg == 0){ // GeM
+            res = metodopot(h_trans, tolerancia);
+            solucion(res, solus_file);
+				} else {
+					  res = h_trans.rank_comun();
+            solucion(res, solus_file);
+				}
+				/*HARDCODEADOOOO */
+				std::ifstream codigos("data/team_code.txt");
+				int numero;
+				char coma;
+				std::string equipo;
+				std::vector<std::pair<double, std::string>> tabla;
+				for(int i = 0; i<h_trans.get_nodes(); i++){
+					codigos >> numero >> coma;
+					getline(codigos, equipo);	
+					tabla.push_back(make_pair(res[i], equipo));
+				}
+				sort(tabla.begin(), tabla.end(), fst_comp_dec);
+				for(int i = 0; i<h_trans.get_nodes(); i++){
+					std::cout << i+1 << " & " << tabla[i].second << std::endl;
+				}
+
     }
 
     solus_file.close();
