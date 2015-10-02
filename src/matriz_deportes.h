@@ -29,18 +29,23 @@ public:
         for(uint i = 0; i<nodes; i++){
             h.push_back(std::vector<double>(nodes, 0));
             m.push_back(std::vector<double>(nodes, 0));
+            ranking_comun.push_back(0);
         }
 
 
         for(uint i = 0; i < edges; i++){
              in >> fecha >> equipo1 >> goles1 >> equipo2 >> goles2;
              // los nodos se numeran desde 1...
-             equipo1--; equipo2--;
+             equipo1--; equipo2--;	
              if(goles1 > goles2){
                  h[equipo2][equipo1] += goles1-goles2;
+								 ranking_comun[equipo1] += 3;
              } else if (goles1 < goles2){
                  h[equipo1][equipo2] += goles2-goles1;
+								 ranking_comun[equipo2] += 3;
              } else {
+								 ranking_comun[equipo1] += 1;
+								 ranking_comun[equipo2] += 1;
                  // ver que hacemos con el empate, por ahora nada
              }
         }
@@ -89,6 +94,10 @@ public:
         return m.size();
     }
 
+    std::vector<double> rank_comun(){
+        return ranking_comun;
+    }
+
     std::vector<double> multiplicar(std::vector<double> x){
         std::vector<double> y;
 
@@ -108,6 +117,7 @@ public:
 
 private:
     std::vector<std::vector<double> >  m;
+		std::vector<double> ranking_comun;
 };
 
 #endif // MATRIZ_DEPORTES_H

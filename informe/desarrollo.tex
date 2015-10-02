@@ -10,13 +10,13 @@ Como dijimos en la introducción, nuestro objetivo será, dada una matriz de tra
 \subsubsection{Método de la potencia}
 El método de la potencia, dada una matriz A, produce un autovalor $\lambda$ y un autovector asociado a $\lambda$, $v$ no nulo. El método es iterativo, y se puede encontrar una mejor explicación sobre él en \cite[Cap. 5.8.1]{dahlquist}. 
 
-El método consiste en tomar un $x^{(0)}$ inicial, y luego construir una sucesión $\{x^{(k)}\}$ de la siguiente manera:
+Consiste en tomar un $x^{(0)}$ inicial, y luego construir una sucesión $\{x^{(k)}\}$ de la siguiente manera:
 
 \[x^{(i)} = \frac{A x^{(i-1)}}{||A x^{(i-1)}||}\]
 
 Y entonces, bajo ciertas condiciones, si se toma $k$ lo suficientemente grande, $x^{(k)} \to \overline{x}$, tal que $A\overline{x} = \lambda \overline{x}$, $\lambda$ el autovalor de mayor módulo. Por ello establecemos como criterio de parada que la diferencia entre el vector generado en una iteración y su anterior sea lo suficientemente chica.
 
-Como probamos en \ref{subsub:prop1}, el autovalor de máximo módulo en este caso es 1, pero puede pasar también que $\lambda = -1$ también sea un autovalor, pero comenzando con $x^{(0)} = (\frac1n,..., \frac1n)$ inicial, nos aseguramos de que las entradas sean siempre positivas, consiguiendo así un autovector asociado a autovalor $\lambda = 1$.
+Como probamos en \ref{subsub:prop1}, el autovalor de máximo módulo en este caso es 1, aunque puede pasar también que $\lambda = -1$ también sea un autovalor. Sin embargo, comenzando con $x^{(0)} = (\frac1n,..., \frac1n)$ inicial, nos aseguramos de que las entradas sean siempre positivas, consiguiendo así un autovector asociado a autovalor $\lambda = 1$.
 
 \subsubsection{PageRank}
 PageRank más que un m\'etodo de cómputo es un m\'etodo de modelado. Dado un grafo cuyos nodos representan páginas webs y sus aristas representan links entre las páginas web, nos permitirá modelar un navegante aleatorio utilizando una cadena de Markov. 
@@ -32,21 +32,21 @@ $P_i$ es la $i$-esima fila de la matriz, y su entrada $j$-ésima nos dice la pro
 \] 
 
 Donde $n_i$ es la cantidad de links salientes de la página $i$.
-El primer problema, obvio, es que en general, esta matriz no es de transición, porque si una página web no tiene links salientes, la matriz va a tener toda una fila de ceros. Por eso, en este caso, se agrega una fila que vale toda $(\frac1n, ..., \frac1n)$.
+El primer problema que se evidencia es que, en general, esta matriz no es de transición, porque si una página web no tiene links salientes, la matriz va a tener toda una fila de ceros. Por eso, en este caso, se agrega una fila que vale toda $(\frac1n, ..., \frac1n)$.
 
 Luego, se introduce el concepto de teletransportación. La idea es que, con una cierta probabilidad $1-c$, el navegante aleatorio puede saltar a cualquier página de toda la red sin importar en cual esté actualmente. Todo esto, nuevamente, esta correctamente explicado en \cite{Brin1998} y \cite{Kamvar2003}.
 
 Luego, puede utilizarse el algoritmo descripto anteriormente para encontrar un autovector de autovalor asociado igual a 1.
 
-En este trabajo en particular, utilizaremos una versión mejorada del m\'etodo de la potencia, adaptada para este problema en particular, propuesta por \cite{Kamvar2003}. Este consiste en separar el único paso del método de la potencia en 3 pasos separados, de tal manera de acelerar el cómputo, aprovechandonos de que la matriz de transición (sin agregarle el factor de teletransportación) es esparsa.
+En este trabajo en particular, utilizaremos una versión mejorada del m\'etodo de la potencia, adaptada para este problema en particular, propuesta por \cite{Kamvar2003}. Este consiste en separar el único paso del método de la potencia en 3 pasos separados, de tal manera de acelerar el cómputo, aprovechándonos de que la matriz de transición (sin agregarle el factor de teletransportación) es esparsa.
 
 De esta manera, se pueden obtener importantes ganancias en lo que respecta a la performance.
 
 \subsubsection{Método GeM}
 
-El método GeM, propuesto en \cite{Govan2008}, tiene como objetivo adaptar el algoritmo de PageRank para ligas deportivas. La idea es simple, al igual que en algoritmo original de PageRank, la idea es armar una cadena de Markov y modelar un navegante aleatorio.
+El método GeM, propuesto en \cite{Govan2008}, tiene como objetivo adaptar el algoritmo de PageRank para ligas deportivas. La idea es simple, al igual que en el algoritmo original de PageRank, la idea es armar una cadena de Markov y modelar un navegante aleatorio.
 
-En este modelo, se representa una temporada (o una fecha, o un periodo de tiempo cualquiera) como un grafo dirigido y pesado, al igual que en el modelo de PageRank. Sin embargo, en este caso, los pesos de la primera matriz no valen 0 o 1, si no que toman el valor del valor absoluto de los puntajes de cada partido.
+En este modelo, se representa una temporada (o una fecha, o un periodo de tiempo cualquiera) como un grafo dirigido y pesado, al igual que en el modelo de PageRank. Sin embargo, en este caso, los pesos de la primera matriz no valen 0 o 1, sino que son el valor absoluto de los puntajes de cada partido.
 
 De esta manera, si el equipo $i$ perdió contra el equipo $j$ por $p$ puntos, en la primera matriz $A$, valdra que $A_{ij} = p$. 
 
