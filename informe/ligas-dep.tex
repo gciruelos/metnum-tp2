@@ -13,182 +13,84 @@ A diferencia de lo que sucedía en la sección (\ref{subsec:pagerank}), aquí no
 
 	\item Algo interesante para analizar es la influencia de los empates en los dos tipos de rankeos. Como ya se dijo, un empate en nuestra implementación de GeM no altera la relación de fuerzas entre los equipos. De hecho, a los fines prácticos, un empate es equivalente a que ambos equipos nunca hayan jugado entre sí (en nuestro modelo), por lo que es claro que la matriz de GeM antes o después de un empate es la misma. Sin embargo, con el método estándar los empates sí que modifican el ranking. No alteran la posición relativa de los equipos que empataron, pero claramente puede mejorar la posición de los dos equipos frente al resto (ya que ambos sumaron un punto). Ante esta situación, podemos suponer que los empates van a tener un efecto no despreciable en los resultados reales, siendo una potencial fuente de diferencias con la versión GeM.
 
-	\item Para valores de \emph{c} \footnote{Recordar que 1-\emph{c} era la probabilidad de teletransportación, o en este caso más concretamente, la probabilidad de que un equipo cualquiera pueda perder contra cualquier otro.} muy chicos los puntajes de los equipos deberían tender a homogeneizarse, generando rankeos poco deseables considerando la \emph{performance} de los equipos. Como contrapartida, para valores de \emph{c} muy altos, el rankeo debería ser más justo.
+	\item Para valores de \emph{c} \footnote{Recordar que 1-\emph{c} era la probabilidad de teletransportación, o en este caso más concretamente, la probabilidad de que un equipo cualquiera pueda ganar contra cualquier otro.} muy chicos los puntajes de los equipos deberían tender a homogeneizarse, generando rankeos poco deseables considerando la \emph{performance} de los equipos. Como contrapartida, para valores de \emph{c} muy altos, el rankeo debería ser más justo.
 \end{itemize}
 
 
-\subsubsection{Análisis cualitativo de los resultados de GeM}
+\subsubsection{Análisis cualitativo de los resultados}
 
-\begin{table}
+\begin{table}[H]
 	\center
-	\begin{tabular}{| c | c | c |}
-	  	\hline
-	  	Posición & Equipo & Puntaje \\ \hline \hline
-		1 & Boca Juniors & 0.0859387 \\ \hline
-		2 & Aldosivi & 0.0653494 \\ \hline
-		3 & River Plate & 0.063251 \\ \hline
-		4 & San Lorenzo & 0.0624152 \\ \hline
-		5 & Rosario Central & 0.048369 \\ \hline
-		6 & Racing Club & 0.0480862 \\ \hline
-		7 & San Martín (SJ) & 0.0439307 \\ \hline
-		8 & Quilmes & 0.0421091 \\ \hline
-		9 & Newell's Old Boys & 0.038184 \\ \hline
-		10 & Vélez Sarsfield & 0.0374806 \\ \hline
-		11 & Independiente & 0.0363642 \\ \hline
-		12 & Belgrano & 0.0362427 \\ \hline
-		13 & Gimnasia y Esgrima (LP) & 0.0334854 \\ \hline
-		14 & Banfield & 0.0308403 \\ \hline
-		15 & Estudiantes (LP) & 0.029259 \\ \hline
-		16 & Unión & 0.0287605 \\ \hline
-		17 & Tigre & 0.0272169 \\ \hline
-		18 & Sarmiento & 0.0258276 \\ \hline
-		19 & Lanús & 0.0251797 \\ \hline
-		20 & Huracán & 0.0247069 \\ \hline
-		21 & Defensa y Justicia & 0.0239225 \\ \hline
-		22 & Olimpo & 0.0224303 \\ \hline
-		23 & Arsenal & 0.0208047 \\ \hline
-		24 & Godoy Cruz & 0.0174517 \\ \hline
-		25 & Temperley & 0.0158447 \\ \hline
-		26 & Crucero del Norte & 0.0156778 \\ \hline
-		27 & Argentinos Juniors & 0.0153485 \\ \hline
-		28 & Nueva Chicago & 0.0142273 \\ \hline
-		29 & Atlético de Rafaela & 0.0112011 \\ \hline
-		30 & Colón & 0.010094 \\ \hline
+	\begin{flushright}
+	\begin{tabular}{| m{0.405\textwidth} || m{0.385\textwidth} |}
+		\rowcolor{LightCyan}
+		\hline Método GeM & Método Estándar \\ \hline
 	\end{tabular}
-	\caption{\footnotesize Ranking correspondiente a la fecha 26 usando el método GeM, para un valor de \emph{c} igual a 0.85.}
+
+	\begin{tabular}{| c | c | c || c | c |}
+	  	\hline
+	  	\rowcolor{LightCyan}
+	  	Posición & Equipo & Puntaje & Equipo & Puntaje \\ \hline \hline
+		1 & Boca Juniors & 0.0859387 & Boca Juniors & 58 \\ \hline
+		2 & \cellcolor{Gray} Aldosivi & 0.0653494 & San Lorenzo & 54 \\ \hline
+		3 & River Plate & 0.063251  & Rosario Central & 52\\ \hline
+		4 & San Lorenzo & 0.0624152 & Racing Club & 49\\ \hline
+		5 & Rosario Central & 0.048369 & River Plate & 48\\ \hline
+		6 & Racing Club & 0.0480862 & Independiente & 45\\ \hline
+		7 & San Martín (SJ) & 0.0439307 & Banfield & 43\\ \hline
+		8 & Quilmes & 0.0421091 & Belgrano & 43\\ \hline
+		9 & Newell's Old Boys & 0.038184 & Tigre & 42\\ \hline
+		10 & Vélez Sarsfield & 0.0374806 & Estudiantes (LP) & 42\\ \hline
+		11 & Independiente & 0.0363642 & Lanús & 41\\ \hline
+		12 & Belgrano & 0.0362427 & Quilmes & 39\\ \hline
+		13 & Gimnasia y Esgrima (LP) & 0.0334854 & Unión & 38\\ \hline
+		14 & Banfield & 0.0308403 & Gimnasia y Esgrima (LP) & 37\\ \hline
+		15 & Estudiantes (LP) & 0.029259 & Newell's Old Boys & 33\\ \hline
+		16 & Unión & 0.0287605 & San Martín (SJ) & 32\\ \hline
+		17 & Tigre & 0.0272169 & Sarmiento & 30\\ \hline
+		18 & Sarmiento & 0.0258276 & \cellcolor{Gray} Aldosivi & 30\\ \hline
+		19 & Lanús & 0.0251797 & Temperley & 29\\ \hline
+		20 & Huracán & 0.0247069 & Argentinos Juniors & 29\\ \hline
+		21 & Defensa y Justicia & 0.0239225 & Olimpo & 29\\ \hline
+		22 & Olimpo & 0.0224303 & Defensa y Justicia & 27 \\ \hline
+		23 & Arsenal & 0.0208047 & Huracán & 26 \\ \hline
+		24 & Godoy Cruz & 0.0174517 & Vélez Sarsfield & 26 \\ \hline
+		25 & Temperley & 0.0158447 & Godoy Cruz & 25 \\ \hline
+		26 & Crucero del Norte & 0.0156778 & Colón & 24 \\ \hline
+		27 & Argentinos Juniors & 0.0153485 & Arsenal & 23 \\ \hline
+		28 & Nueva Chicago & 0.0142273 & Atlético de Rafaela & 22 \\ \hline
+		29 & Atlético de Rafaela & 0.0112011 & Nueva Chicago & 17 \\ \hline
+		30 & Colón & 0.010094 & Crucero del Norte & 14 \\ \hline
+	\end{tabular}
+	\end{flushright}
+	\caption{\footnotesize Ranking correspondiente a la fecha 26 usando el método GeM, para un valor de $c = 0.85$, y el método estándar.}
+	\label{tab:fecha26}
 \end{table}
 
-\begin{table}
-	\center
-	\begin{tabular}{| c | c | c |}
-	  	\hline
-	  	Posición & Equipo & Puntaje \\ \hline \hline
-		1 & Boca Juniors & 58 \\ \hline
-		2 & San Lorenzo & 54 \\ \hline
-		3 & Rosario Central & 52 \\ \hline
-		4 & Racing Club & 49 \\ \hline
-		5 & River Plate & 48 \\ \hline
-		6 & Independiente & 45 \\ \hline
-		7 & Banfield & 43 \\ \hline
-		8 & Belgrano & 43 \\ \hline
-		9 & Tigre & 42 \\ \hline
-		10 & Estudiantes (LP) & 42 \\ \hline
-		11 & Lanús & 41 \\ \hline
-		12 & Quilmes & 39 \\ \hline
-		13 & Unión & 38 \\ \hline
-		14 & Gimnasia y Esgrima (LP) & 37 \\ \hline
-		15 & Newell's Old Boys & 33 \\ \hline
-		16 & San Martín (SJ) & 32 \\ \hline
-		17 & Sarmiento & 30 \\ \hline
-		18 & Aldosivi & 30 \\ \hline
-		19 & Temperley & 29 \\ \hline
-		20 & Argentinos Juniors & 29 \\ \hline
-		21 & Olimpo & 29 \\ \hline
-		22 & Defensa y Justicia & 27 \\ \hline
-		23 & Huracán & 26 \\ \hline
-		24 & Vélez Sarsfield & 26 \\ \hline
-		25 & Godoy Cruz & 25 \\ \hline
-		26 & Colón & 24 \\ \hline
-		27 & Arsenal & 23 \\ \hline
-		28 & Atlético de Rafaela & 22 \\ \hline
-		29 & Nueva Chicago & 17 \\ \hline
-		30 & Crucero del Norte & 14 \\ \hline
-	\end{tabular}
-	\caption{\footnotesize Ranking correspondiente a la fecha 26 usando el método estándar.}
-\end{table}
+Al observar la tabla \ref{tab:fecha26}, notamos como primera gran sorpresa que Aldosivi (8 ganados-12 perdidos) aparece segundo en nuestro ranking GeM, siendo que en la realidad ocupa la posición 18. Este resultado, \emph{a priori} extraño, parece cobrar sentido si consideramos lo sucedido en la fecha 13 del torneo: Aldosivi goleó por 3-0 a Boca, el actual puntero según nuestro ranking (y también según el ranking oficial). En efecto, si vemos la tabla \ref{tab:fecha12-13} podemos apreciar como la contundente derrota de Boca (que hasta ese momento estaba primero) permitió catapultar a Aldosivi del cuarto al primer puesto, con una diferencia respecto del segundo particularmente amplia. 
 
-\begin{table}
-	\center
-	\begin{tabular}{| c | c | c |}
-	  	\hline
-	  	Posición & Equipo & Puntaje \\ \hline \hline
-		1 & River Plate & 0.0450669 \\ \hline
-		2 & Lanús & 0.0450669 \\ \hline
-		3 & Vélez Sarsfield & 0.0450669 \\ \hline
-		4 & Temperley & 0.0450669 \\ \hline
-		5 & Rosario Central & 0.0450669 \\ \hline
-		6 & Independiente & 0.0450669 \\ \hline
-		7 & Estudiantes (LP) & 0.0450669 \\ \hline
-		8 & Argentinos Juniors & 0.0450669 \\ \hline
-		9 & Boca Juniors & 0.0450669 \\ \hline
-		10 & Belgrano & 0.0450669 \\ \hline
-		11 & Defensa y Justicia & 0.0450669 \\ \hline
-		12 & Unión & 0.0450669 \\ \hline
-		13 & San Lorenzo & 0.0450669 \\ \hline
-		14 & Olimpo & 0.0243606 \\ \hline
-		15 & Tigre & 0.0243606 \\ \hline
-		16 & Arsenal & 0.0243606 \\ \hline
-		17 & Sarmiento & 0.0243606 \\ \hline
-		18 & San Martín (SJ) & 0.0243606 \\ \hline
-		19 & Atlético de Rafaela & 0.0243606 \\ \hline
-		20 & Banfield & 0.0243606 \\ \hline
-		21 & Racing Club & 0.0243606 \\ \hline
-		22 & Quilmes & 0.0243606 \\ \hline
-		23 & Colón & 0.0243606 \\ \hline
-		24 & Nueva Chicago & 0.0243606 \\ \hline
-		25 & Newell's Old Boys & 0.0243606 \\ \hline
-		26 & Aldosivi & 0.0243606 \\ \hline
-		27 & Huracán & 0.0243606 \\ \hline
-		28 & Godoy Cruz & 0.0243606 \\ \hline
-		29 & Gimnasia y Esgrima (LP) & 0.0243606 \\ \hline
-		30 & Crucero del Norte & 0.0243606 \\ \hline
-	\end{tabular}
-	\caption{\footnotesize Ranking correspondiente a la fecha 1 usando el método GeM, para un valor de \emph{c} igual a 0.85.}
-\end{table}
+Vale destacar, que en la realidad, este resultado tuvo un impacto significativamente menor: Boca siguió estando primero, con la pequeña diferencia de que fue alcanzado por San Lorenzo, mientras que Aldosivi se mantuvo lejos de la punta, en el puesto 8.
 
-\begin{table}
-	\center
-	\begin{tabular}{| c | c | c |}
-	  	\hline
-	  	Posición & Equipo & Puntaje \\ \hline \hline
-		1 & Lanús & 3 \\ \hline
-		2 & Vélez Sarsfield & 3 \\ \hline
-		3 & Unión & 3 \\ \hline
-		4 & Temperley & 3 \\ \hline
-		5 & San Lorenzo & 3 \\ \hline
-		6 & Rosario Central & 3 \\ \hline
-		7 & River Plate & 3 \\ \hline
-		8 & Independiente & 3 \\ \hline
-		9 & Estudiantes (LP) & 3 \\ \hline
-		10 & Defensa y Justicia & 3 \\ \hline
-		11 & Argentinos Juniors & 3 \\ \hline
-		12 & Belgrano & 3 \\ \hline
-		13 & Boca Juniors & 3 \\ \hline
-		14 & Crucero del Norte & 1 \\ \hline
-		15 & Tigre & 1 \\ \hline
-		16 & San Martín (SJ) & 1 \\ \hline
-		17 & Godoy Cruz & 1 \\ \hline
-		18 & Newell's Old Boys & 0 \\ \hline
-		19 & Nueva Chicago & 0 \\ \hline
-		20 & Olimpo & 0 \\ \hline
-		21 & Quilmes & 0 \\ \hline
-		22 & Racing Club & 0 \\ \hline
-		23 & Aldosivi & 0 \\ \hline
-		24 & Colón & 0 \\ \hline
-		25 & Banfield & 0 \\ \hline
-		26 & Huracán & 0 \\ \hline
-		27 & Sarmiento & 0 \\ \hline
-		28 & Atlético de Rafaela & 0 \\ \hline
-		29 & Arsenal & 0 \\ \hline
-		30 & Gimnasia y Esgrima (LP) & 0 \\ \hline
-	\end{tabular}
-	\caption{\footnotesize Ranking correspondiente a la fecha 1 usando el método estándar.}
-\end{table}
+En los sucesivos partidos, Aldosivi sufrió una larga lista de derrotas, sin embargo, como vimos en la tabla \ref{tab:fecha26} esto apenas si perjudicó su posición. Podemos decir que esto es producto del \emph{batacazo} que dió frente a Boca, que mantuvo durante casi la totalidad del torneo su hegemonía por sobre los otros equipos. Dicho de otra forma, la suerte de Aldosivi quedó en algún punto supeditada a la de Boca, pues entre mejor le fuera a este último, más significativos serían los 3 goles que le había hecho para su propio puntaje. Esto sucede a tal punto que, a la fecha siguiente, Boca pierde 2-0 con Velez pero en lugar de perjudicarlo genera que, posiblemente en combinación con el hecho de que Aldosivi también perdiera por una diferencia de un gol, y de que River (quien había perdido el superclásico) ganara por 2, vuelva a estar puntero, desplazando a Aldosivi al tercer puesto. Es decir que lo importante para rescatar de este úlimo hecho, es que que al finalizar la fecha 14 los 3 goles de Aldosivi ante Boca perdían un poco de peso, pues ahora, en total, este tenía 2 goles más en su contra.
 
-\begin{table}
+Luego, por todo lo dicho hasta aquí, creemos que nuestra primer hipótesis, concerniente a la distinta importancia que se le asigna a los goles según la performance del equipo que los recibe, queda verificada.  
+
+\begin{table}[H]
 	\center
 	\begin{flushright}
 	\begin{tabular}{| m{16.65em} || m{17.15em} |}
+		\rowcolor{LightCyan}
 		\hline Fecha 12 & Fecha 13 \\ \hline
 	\end{tabular}
 
 	\begin{tabular}{| c | c | c || c | c |}
 	  	\hline
+	  	\rowcolor{LightCyan}
 	  	Posición & Equipo & Puntaje & Equipo & Puntaje \\ \hline \hline
-		1 & Boca Juniors & 0.108944 &  Aldosivi & 0.117217 \\ \hline
-		2 & River Plate & 0.0815019 & Boca Juniors & 0.0892615 \\ \hline
+		1 & \cellcolor{Gray} Boca Juniors & 0.108944 &  \cellcolor{Gray} Aldosivi & 0.117217 \\ \hline
+		2 & River Plate & 0.0815019 & \cellcolor{Gray} Boca Juniors & 0.0892615 \\ \hline
 		3 & Rosario Central & 0.0735106 & River Plate & 0.0657072 \\ \hline
-		4 & Aldosivi & 0.0546487 & Rosario Central & 0.0608375 \\ \hline
+		4 & \cellcolor{Gray} Aldosivi & 0.0546487 & Rosario Central & 0.0608375 \\ \hline
 		5 & San Lorenzo & 0.0511854 & Banfield & 0.0546665 \\ \hline
 		6 & Racing Club & 0.046461 & San Lorenzo & 0.0497559 \\ \hline
 		7 & Belgrano & 0.0464054 & Gimnasia y Esgrima (LP) & 0.0478387 \\ \hline
@@ -217,5 +119,118 @@ A diferencia de lo que sucedía en la sección (\ref{subsec:pagerank}), aquí no
 		30 & Nueva Chicago & 0.0101696 & Nueva Chicago & 0.00672374 \\ \hline
 	\end{tabular}
 	\end{flushright}
-	\caption{\footnotesize Posiciones de las fechas 12 y 13.}
+	\caption{\footnotesize Posiciones de las fechas 12 y 13 calculadas con GeM y $c = 0.85$.}
+	\label{tab:fecha12-13}
+\end{table}
+
+A continuación veamos, con un experimento muy simple pero ilustrativo, como el tomar un modelo que ignora los empates frente a otro que les da cierta importancia puede afectar sensiblemente la tabla de posiciones. Para eso veamos que sucede al considerar los resultados de la primera fecha que se muestran en la tabla \ref{tab:fecha1}. Rápidamente, podemos notar que en ambos casos los equipos que comparten el primer lugar son los mismos: los que ganaron su respectivo partido. Sin embargo, en la versión GeM tanto los equipos que empataron como los que perdieron tienen todos la última posición, cosa que no ocurre en el modelo estándar, donde los equipos que empataron están segundos mientras que los que perdieron están últimos. Esto en principio parece un rankeo un poco injusto para los que empataron, que son puestos al mismo nivel de los perdedores.
+
+Vale decir que esta es una situación muy particular: al ser la primer fecha, la matriz de adyacencias no solo será muy esparsa, sino que al menos la mitad de sus filas serán 0 (correspondientes a los equipos que ganaron o empataron)mientras que de la otra mitad a lo sumo tendrán un coeficiente no nulo (correspondientes a los equipos que perdieron). Debido a esto, es que, por ejemplo, todos los equipos que ganaron tienen el mismo puntaje a pesar de que hayan ganado por distintas diferencias (donde la más grande fue de River por 3 goles). Por lo tanto, este debe considerarse como un ejemplo particular donde el dar puntos a los empates genera una situación un poco más justa, pero no debe extrapolarse una conclusión apresurada y afirmar que esto valga para cualquier caso. La experimentación necesaria, así como el análisis que se requiere, para determinar esas conclusiones son de una dificultad no trivial (especialmente considerando que en el caso de GeM el puntaje de un equipo no depende sólo de sus resultados sino también de los de sus adversarios), por lo que no lo abordaremos en más profundidad en este trabajo.
+
+\begin{table}[H]
+	\center
+	\begin{flushright}
+	\begin{tabular}{| m{0.405\textwidth} || m{0.3925\textwidth} |}
+		\rowcolor{LightCyan}
+		\hline Método GeM & Método Estándar \\ \hline
+	\end{tabular}
+
+	\begin{tabular}{| c | c | c || c | c |}
+	  	\hline
+	  	\rowcolor{LightCyan}
+	  	Posición & Equipo & Puntaje & Equipo & Puntaje \\ \hline \hline
+		1 & \cellcolor{green!20}River Plate & 0.0450669 & \cellcolor{green!20}Lanús & 3 \\ \hline
+		2 & \cellcolor{green!20}Lanús & 0.0450669 & \cellcolor{green!20}Vélez Sarsfield & 3 \\ \hline 
+		3 & \cellcolor{green!20}Vélez Sarsfield & 0.0450669 & \cellcolor{green!20}Unión & 3 \\ \hline 
+		4 & \cellcolor{green!20}Temperley & 0.0450669 & \cellcolor{green!20}Temperley & 3 \\ \hline 
+		5 & \cellcolor{green!20}Rosario Central & 0.0450669 & \cellcolor{green!20}San Lorenzo & 3 \\ \hline 
+		6 & \cellcolor{green!20}Independiente & 0.0450669 & \cellcolor{green!20}Rosario Central & 3 \\ \hline 
+		7 & \cellcolor{green!20}Estudiantes (LP) & 0.0450669 & \cellcolor{green!20}River Plate & 3 \\ \hline 
+		8 & \cellcolor{green!20}Argentinos Juniors & 0.0450669 & \cellcolor{green!20}Independiente & 3 \\ \hline 
+		9 & \cellcolor{green!20}Boca Juniors & 0.0450669 & \cellcolor{green!20}Estudiantes (LP) & 3 \\ \hline 
+		10 & \cellcolor{green!20}Belgrano & 0.0450669 & \cellcolor{green!20}Defensa y Justicia & 3 \\ \hline 
+		11 & \cellcolor{green!20}Defensa y Justicia & 0.0450669 & \cellcolor{green!20}Argentinos Juniors & 3 \\ \hline 
+		12 & \cellcolor{green!20}Unión & 0.0450669 & \cellcolor{green!20}Belgrano & 3 \\ \hline 
+		13 & \cellcolor{green!20}San Lorenzo & 0.0450669 & \cellcolor{green!20}Boca Juniors & 3 \\ \hline
+		14 & \cellcolor{yellow!20}Olimpo & 0.0243606 & \cellcolor{yellow!20}Crucero del Norte & 1 \\ \hline
+		15 & \cellcolor{yellow!20}Tigre & 0.0243606 & \cellcolor{yellow!20}Tigre & 1 \\ \hline
+		16 & \cellcolor{yellow!20}Arsenal & 0.0243606 & \cellcolor{yellow!20}San Martín (SJ) & 1 \\ \hline
+		17 & \cellcolor{yellow!20}Sarmiento & 0.0243606 & \cellcolor{yellow!20}Godoy Cruz & 1 \\ \hline
+		18 & \cellcolor{yellow!20}San Martín (SJ) & 0.0243606 & \cellcolor{red!20}Newell's Old Boys & 0 \\ \hline
+		19 & \cellcolor{yellow!20}Atlético de Rafaela & 0.0243606 & \cellcolor{red!20}Nueva Chicago & 0 \\ \hline
+		20 & \cellcolor{yellow!20}Banfield & 0.0243606 & \cellcolor{red!20}Olimpo & 0 \\ \hline
+		21 & \cellcolor{yellow!20}Racing Club & 0.0243606 &\cellcolor{red!20} Quilmes & 0 \\ \hline
+		22 & \cellcolor{yellow!20}Quilmes & 0.0243606 &\cellcolor{red!20} Racing Club & 0 \\ \hline
+		23 & \cellcolor{yellow!20}Colón & 0.0243606 & \cellcolor{red!20}Aldosivi & 0 \\ \hline
+		24 & \cellcolor{yellow!20}Nueva Chicago & 0.0243606 & \cellcolor{red!20}Colón & 0 \\ \hline
+		25 & \cellcolor{yellow!20}Newell's Old Boys & 0.0243606 & \cellcolor{red!20}Banfield & 0 \\ \hline
+		26 & \cellcolor{yellow!20}Aldosivi & 0.0243606 & \cellcolor{red!20}Huracán & 0 \\ \hline
+		27 & \cellcolor{yellow!20}Huracán & 0.0243606 & \cellcolor{red!20}Sarmiento & 0 \\ \hline
+		28 & \cellcolor{yellow!20}Godoy Cruz & 0.0243606 & \cellcolor{red!20}Atlético de Rafaela & 0 \\ \hline
+		29 & \cellcolor{yellow!20}Gimnasia y Esgrima (LP) & 0.0243606  & \cellcolor{red!20}Arsenal & 0 \\ \hline
+		30 & \cellcolor{yellow!20}Crucero del Norte & 0.0243606 &\cellcolor{red!20} Gimnasia y Esgrima (LP) & 0 \\ \hline
+	\end{tabular}
+	\end{flushright}
+	\caption{\footnotesize Ranking correspondiente a la fecha 1 usando el método GeM, para un valor de  $c = 0.85$, y el método estándar. Los sombreados verde, amarillo y rojo señalan la posición del equipo que puede ser 1º, 2º o 3º respectivamente.}
+	\label{tab:fecha1}
+\end{table}
+
+Finalmente, analicemos el efecto de variar el valor del $c$. Para esto consideremos los resultados expuestos en la tabla \ref{tab:variosc}, que nos muestra el rankeo correspondiente a la fecha 26 usando GeM con dos valores extremos de $c$: $0.1$ y $0.99$. Recordar que el primero es el caso en que la probabilidad de que un equipo pierda contra otro depende mucho menos de los resultados previos y tiende a ser la misma para todos, mientras que el segundo es el opuesto: los resultados previos determinan casi totalmente la probabilidad de que un equipo pierda con otro.
+
+Curiosamente vemos que no hay diferencias grandes entre ambos rankings. De hecho en muchos casos, la posición del equipo no cambió. Aunque en efecto, como habíamos supuesto, el $c$ pequeño hizo que las puntuaciones se homogeneizaran, vemos que en la práctica la ventaja que le da a un equipo ser más goleador que otros y ganarle a equipos importantes sigue siendo lo suficientemente significativa como para que el ranking no presente resultados absurdos (como que un equipo que rankeaba de la mitad para abajo de la tabla con un $c$ alto, pase a estar en los primeros lugares con uno bajo). De hecho, más bien pareciera que pasa lo contrario. 
+
+Si volvemos a considerar el particular caso de Aldosivi, vemos que al tomar un $c$ más cercano a 0 su posición en la tabla empeoró en cuatro posiciones (respecto de las versiones con $c=0.85$ $c=0.99$). Esto es muy razonable si tenemos en cuenta que el buen rankeo de Aldosivi estaba fuertemente basado en un resultado aislado (un \emph{outlier} si se quiere) como fue su amplia victoria sobre Boca, el equipo que mejor $performance$ tuvo en el campeonato. No sólo eso, sino que también le gano por 1-0 a San Lorenzo, otro de los principales equipos. Al reducir la incidencia de los resultados de todos los partidos sobre el cálculo de los puntajes, Aldosivi recibe muchos menos ``votos'' de Boca o San Lorenzo, pues los mismos ahora se reparten más equitativamente entre todos los equipos, y como Aldosivi tuvo pocas victorias en general se ve perjudicado con este cambio.
+
+De la misma forma, pasa algo muy parecido con Vélez (el equipo que más posiciones bajó al considerar el $c$ más chico) que también le ganó a Boca (2-0) y al mismo Aldosivi (2-0), pero en términos generales apenas pudo ganar 6 partidos y perdió 13.
+
+De hecho, la tendencia general es que la subtabla correspondiente a $c=0.1$ tiende a asemejarse mucho más al ranking oficial, que puede verse en la tabla \ref{tab:fecha26}, de que lo hace la subtabla correspondiente a $c=0.99$. Recordar que el método estándar no considera las diferencias de goles, y sí considera la cantidad de victorias, derrotas y empates. Podemos pensar entonces, basándonos en lo que venimos viendo, que un valor más chico de $c$ genera que la cantidad de victorias pese más y al mismo tiempo reduce la importancia de goleadas muy abultadas, lo cual puede ser útil para reducir el impacto de resultados aislados como el de Aldosivi o el de Velez.
+
+En resumen, llegamos a la conclusión de que, contra lo que habíamos supuesto en las hipótesis, la utilización de un $c$ bajo puede dar resultados más sensatos que la de uno muy alto, pues evita que equipos que muestran un bajo rendimiento logren un excelente rankeo sólo por \emph{batacazos} aislados. Por el contrario, el $c$ demasiado alto acrecenta estas diferencias. Particularmente, encontramos que, al menos para este caso, un valor de $c=0.35$ resultado bastante apropiado, basándonos en que, en sentido decreciente, es el primer valor para el cual Aldosivi pasa a estar por debajo de Racing (14 ganados-5 perdidos), que mostró un mejor nivel a lo largo del torneo. No ponemos el ranking obtenido para este valor dado que no aporta nada nuevo a la discución.
+
+\begin{table}[H]
+	\center
+	\begin{flushright}
+	\begin{tabular}{| m{0.405\textwidth} || m{0.416\textwidth} |}
+		\rowcolor{LightCyan}
+		\hline $c=0.1$ & $c=0.99$ \\ \hline
+	\end{tabular}
+
+	\begin{tabular}{| c | c | c || c | c |}
+	  	\hline
+	  	\rowcolor{LightCyan}
+	  	Posición & Equipo & Puntaje & Equipo & Puntaje \\ \hline \hline
+		1 & Boca Juniors & 0.0391469 & Boca Juniors & 0.0945905 \\ \hline
+		2 & San Lorenzo & 0.0370791 & \cellcolor{green!20}Aldosivi & 0.0744865 \\ \hline
+		3 & River Plate & 0.0368742 & River Plate & 0.0675502 \\ \hline
+		4 & Racing Club & 0.0357606 & San Lorenzo & 0.0656075 \\ \hline
+		5 & Rosario Central & 0.0353159 & Rosario Central & 0.0505593 \\ \hline
+		6 & \cellcolor{green!20}Aldosivi & 0.0347251 & Racing Club & 0.049052 \\ \hline
+		7 & Quilmes & 0.0344085 & San Martín (SJ) & 0.0468815 \\ \hline
+		8 & Independiente & 0.0341835 & Quilmes & 0.0433725 \\ \hline
+		9 & Belgrano & 0.034173 & \cellcolor{blue!20}Vélez Sarsfield & 0.0410949 \\ \hline
+		10 & San Martín (SJ) & 0.033846 & Newell's Old Boys & 0.039274 \\ \hline
+		11 & Newell's Old Boys & 0.0337048 & Independiente & 0.0355528 \\ \hline
+		12 & Gimnasia y Esgrima (LP) & 0.033465 & Belgrano & 0.0354938 \\ \hline
+		13 & Lanús & 0.0334376 & Gimnasia y Esgrima (LP) & 0.0337113 \\ \hline
+		14 & Banfield & 0.0332383  & Banfield & 0.0304023 \\ \hline
+		15 & Tigre & 0.0331063 & Estudiantes (LP) & 0.0290798 \\ \hline
+		16 & Estudiantes (LP) & 0.0326988 & Unión & 0.0283743 \\ \hline
+		17 & Unión & 0.0325988 & Tigre & 0.0260657 \\ \hline
+		18 & Sarmiento & 0.0325042 & Sarmiento & 0.0245763 \\ \hline
+		19 & \cellcolor{blue!20}Vélez Sarsfield & 0.0324059 & Defensa y Justicia & 0.023483 \\ \hline
+		20 & Arsenal & 0.0322979 & Huracán & 0.0229007 \\ \hline
+		21 & Huracán & 0.0322357 & Lanús & 0.0220692 \\ \hline
+		22 & Defensa y Justicia & 0.0318777 & Olimpo & 0.0215218 \\ \hline
+		23 & Olimpo & 0.0318753 & Arsenal & 0.0179464 \\ \hline
+		24 & Argentinos Juniors & 0.0317518 & Godoy Cruz & 0.0142913 \\ \hline
+		25 & Godoy Cruz & 0.0317468 & Crucero del Norte & 0.012915 \\ \hline
+		26 & Temperley & 0.0315835 & Temperley & 0.0124947 \\ \hline
+		27 & Crucero del Norte & 0.0313297 & Argentinos Juniors & 0.0115357 \\ \hline
+		28 & Nueva Chicago & 0.0310144 & Nueva Chicago & 0.0114375 \\ \hline
+		29 & Atlético de Rafaela & 0.0308366 & Atlético de Rafaela & 0.00759916 \\ \hline
+		30 & Colón & 0.0307777 & Colón & 0.00608033 \\ \hline
+	\end{tabular}
+	\end{flushright}
+	\caption{\footnotesize Ranking correspondiente a la fecha 26 usando el método GeM para dos valores de $c$ distintos: $0.1$ y $0.99$}
+	\label{tab:variosc}
 \end{table}

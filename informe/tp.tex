@@ -1,6 +1,6 @@
 \documentclass[hidelinks,a4paper,12pt, nofootinbib]{article}
 \usepackage[width=15.5cm, left=3cm, top=2.5cm, right=2cm, left=2cm, height= 24.5cm]{geometry}
-\usepackage[spanish]{babel}
+\usepackage[spanish, es-tabla]{babel} %es-tabla es para que ponga Tabla en vez de Cuadro en el caption
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{xspace}
@@ -13,6 +13,7 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{array}
+\usepackage{xcolor,colortbl}
 
 \usepackage{graphicx}
 \usepackage{sidecap}
@@ -42,6 +43,10 @@
 
 \setlength{\parindent}{4em}
 \setlength{\parskip}{0.5em}
+
+%Defino colores para las tablas
+\definecolor{LightCyan}{rgb}{0.77,0.9,0.9}
+\definecolor{Gray}{gray}{0.8}
 
 
 %%fancyhdr
