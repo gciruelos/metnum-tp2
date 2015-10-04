@@ -1,0 +1,221 @@
+El conjunto de datos que consideramos para esta sección es el correspondiente al actual torneo de primera división del fútbol argentino. Dicha liga cuenta con las siguientes características relevantes al problema que queremos tratar:
+\begin{enumerate}
+	\item Hay un total de 30 equipos que juegan todos una vez entre sí. Además, cada equipo juega un partido adicional con su clásico rival.
+	\item Los empates son un resultado posible, e incluso muy frecuente. En nuestra implementación de GeM, la posición que tomamos frente a esta situación (que no está contemplada en \cite{Govan2008}) es la de no hacer nada: es decir, si los equipos $i$ y $j$ empataron (o más generalmente, la diferencia absoluta de goles entre todos los partidos que jugaron es 0), entonces en las posiciones $(i,j)$ y $(j,i)$ de nuestra matriz de adyacencia ponemos 0. Consideramos que esta medida es más que razonable, pues en definitiva lo que busca el algoritmo GeM es establecer una \emph{relación de fuerza} entre los equipos a partir de la diferencia de goles que se sacan, la cual, en el caso concreto del empate, es nula. 
+	\item El sistema de puntuación estándar es: 3 puntos por partido ganado, 1 por empate y 0 por derrota.
+	\item Al momento de realizarse el presente trabajo, sólo se ha jugado hasta la fecha 26 del torneo. Por lo tanto sólo analizaremos los datos hasta la misma. 
+\end{enumerate} 
+
+A diferencia de lo que sucedía en la sección (\ref{subsec:pagerank}), aquí no nos interesa realizar un análisis sobre la performance o la convergencia del método, sino más bien un análisis sobre la \emph{calidad} (en algún sentido) de los rankings generados por el mismo, contrastándolos con los reales. Por lo tanto las hipótesis irán en esa dirección. A continuación las enlistamos.
+
+\begin{itemize}
+	\item No todos los goles tendrán el mismo peso. Esto es lógico si consideramos la naturaleza del método: si el equipo A le gana al equipo B, que está invicto hasta el momento, por X goles, esto impactará mucho más en el rankeo de A que si le hubiera ganado por X goles a C, un equipo que pierde usualmente. Esto ya plantea una diferencia importante con el método de puntuación estándar, donde en cualquiera de los dos casos A mejoraría su puntaje de la misma manera.
+
+	\item Algo interesante para analizar es la influencia de los empates en los dos tipos de rankeos. Como ya se dijo, un empate en nuestra implementación de GeM no altera la relación de fuerzas entre los equipos. De hecho, a los fines prácticos, un empate es equivalente a que ambos equipos nunca hayan jugado entre sí (en nuestro modelo), por lo que es claro que la matriz de GeM antes o después de un empate es la misma. Sin embargo, con el método estándar los empates sí que modifican el ranking. No alteran la posición relativa de los equipos que empataron, pero claramente puede mejorar la posición de los dos equipos frente al resto (ya que ambos sumaron un punto). Ante esta situación, podemos suponer que los empates van a tener un efecto no despreciable en los resultados reales, siendo una potencial fuente de diferencias con la versión GeM.
+
+	\item Para valores de \emph{c} \footnote{Recordar que 1-\emph{c} era la probabilidad de teletransportación, o en este caso más concretamente, la probabilidad de que un equipo cualquiera pueda perder contra cualquier otro.} muy chicos los puntajes de los equipos deberían tender a homogeneizarse, generando rankeos poco deseables considerando la \emph{performance} de los equipos. Como contrapartida, para valores de \emph{c} muy altos, el rankeo debería ser más justo.
+\end{itemize}
+
+
+\subsubsection{Análisis cualitativo de los resultados de GeM}
+
+\begin{table}
+	\center
+	\begin{tabular}{| c | c | c |}
+	  	\hline
+	  	Posición & Equipo & Puntaje \\ \hline \hline
+		1 & Boca Juniors & 0.0859387 \\ \hline
+		2 & Aldosivi & 0.0653494 \\ \hline
+		3 & River Plate & 0.063251 \\ \hline
+		4 & San Lorenzo & 0.0624152 \\ \hline
+		5 & Rosario Central & 0.048369 \\ \hline
+		6 & Racing Club & 0.0480862 \\ \hline
+		7 & San Martín (SJ) & 0.0439307 \\ \hline
+		8 & Quilmes & 0.0421091 \\ \hline
+		9 & Newell's Old Boys & 0.038184 \\ \hline
+		10 & Vélez Sarsfield & 0.0374806 \\ \hline
+		11 & Independiente & 0.0363642 \\ \hline
+		12 & Belgrano & 0.0362427 \\ \hline
+		13 & Gimnasia y Esgrima (LP) & 0.0334854 \\ \hline
+		14 & Banfield & 0.0308403 \\ \hline
+		15 & Estudiantes (LP) & 0.029259 \\ \hline
+		16 & Unión & 0.0287605 \\ \hline
+		17 & Tigre & 0.0272169 \\ \hline
+		18 & Sarmiento & 0.0258276 \\ \hline
+		19 & Lanús & 0.0251797 \\ \hline
+		20 & Huracán & 0.0247069 \\ \hline
+		21 & Defensa y Justicia & 0.0239225 \\ \hline
+		22 & Olimpo & 0.0224303 \\ \hline
+		23 & Arsenal & 0.0208047 \\ \hline
+		24 & Godoy Cruz & 0.0174517 \\ \hline
+		25 & Temperley & 0.0158447 \\ \hline
+		26 & Crucero del Norte & 0.0156778 \\ \hline
+		27 & Argentinos Juniors & 0.0153485 \\ \hline
+		28 & Nueva Chicago & 0.0142273 \\ \hline
+		29 & Atlético de Rafaela & 0.0112011 \\ \hline
+		30 & Colón & 0.010094 \\ \hline
+	\end{tabular}
+	\caption{\footnotesize Ranking correspondiente a la fecha 26 usando el método GeM, para un valor de \emph{c} igual a 0.85.}
+\end{table}
+
+\begin{table}
+	\center
+	\begin{tabular}{| c | c | c |}
+	  	\hline
+	  	Posición & Equipo & Puntaje \\ \hline \hline
+		1 & Boca Juniors & 58 \\ \hline
+		2 & San Lorenzo & 54 \\ \hline
+		3 & Rosario Central & 52 \\ \hline
+		4 & Racing Club & 49 \\ \hline
+		5 & River Plate & 48 \\ \hline
+		6 & Independiente & 45 \\ \hline
+		7 & Banfield & 43 \\ \hline
+		8 & Belgrano & 43 \\ \hline
+		9 & Tigre & 42 \\ \hline
+		10 & Estudiantes (LP) & 42 \\ \hline
+		11 & Lanús & 41 \\ \hline
+		12 & Quilmes & 39 \\ \hline
+		13 & Unión & 38 \\ \hline
+		14 & Gimnasia y Esgrima (LP) & 37 \\ \hline
+		15 & Newell's Old Boys & 33 \\ \hline
+		16 & San Martín (SJ) & 32 \\ \hline
+		17 & Sarmiento & 30 \\ \hline
+		18 & Aldosivi & 30 \\ \hline
+		19 & Temperley & 29 \\ \hline
+		20 & Argentinos Juniors & 29 \\ \hline
+		21 & Olimpo & 29 \\ \hline
+		22 & Defensa y Justicia & 27 \\ \hline
+		23 & Huracán & 26 \\ \hline
+		24 & Vélez Sarsfield & 26 \\ \hline
+		25 & Godoy Cruz & 25 \\ \hline
+		26 & Colón & 24 \\ \hline
+		27 & Arsenal & 23 \\ \hline
+		28 & Atlético de Rafaela & 22 \\ \hline
+		29 & Nueva Chicago & 17 \\ \hline
+		30 & Crucero del Norte & 14 \\ \hline
+	\end{tabular}
+	\caption{\footnotesize Ranking correspondiente a la fecha 26 usando el método estándar.}
+\end{table}
+
+\begin{table}
+	\center
+	\begin{tabular}{| c | c | c |}
+	  	\hline
+	  	Posición & Equipo & Puntaje \\ \hline \hline
+		1 & River Plate & 0.0450669 \\ \hline
+		2 & Lanús & 0.0450669 \\ \hline
+		3 & Vélez Sarsfield & 0.0450669 \\ \hline
+		4 & Temperley & 0.0450669 \\ \hline
+		5 & Rosario Central & 0.0450669 \\ \hline
+		6 & Independiente & 0.0450669 \\ \hline
+		7 & Estudiantes (LP) & 0.0450669 \\ \hline
+		8 & Argentinos Juniors & 0.0450669 \\ \hline
+		9 & Boca Juniors & 0.0450669 \\ \hline
+		10 & Belgrano & 0.0450669 \\ \hline
+		11 & Defensa y Justicia & 0.0450669 \\ \hline
+		12 & Unión & 0.0450669 \\ \hline
+		13 & San Lorenzo & 0.0450669 \\ \hline
+		14 & Olimpo & 0.0243606 \\ \hline
+		15 & Tigre & 0.0243606 \\ \hline
+		16 & Arsenal & 0.0243606 \\ \hline
+		17 & Sarmiento & 0.0243606 \\ \hline
+		18 & San Martín (SJ) & 0.0243606 \\ \hline
+		19 & Atlético de Rafaela & 0.0243606 \\ \hline
+		20 & Banfield & 0.0243606 \\ \hline
+		21 & Racing Club & 0.0243606 \\ \hline
+		22 & Quilmes & 0.0243606 \\ \hline
+		23 & Colón & 0.0243606 \\ \hline
+		24 & Nueva Chicago & 0.0243606 \\ \hline
+		25 & Newell's Old Boys & 0.0243606 \\ \hline
+		26 & Aldosivi & 0.0243606 \\ \hline
+		27 & Huracán & 0.0243606 \\ \hline
+		28 & Godoy Cruz & 0.0243606 \\ \hline
+		29 & Gimnasia y Esgrima (LP) & 0.0243606 \\ \hline
+		30 & Crucero del Norte & 0.0243606 \\ \hline
+	\end{tabular}
+	\caption{\footnotesize Ranking correspondiente a la fecha 1 usando el método GeM, para un valor de \emph{c} igual a 0.85.}
+\end{table}
+
+\begin{table}
+	\center
+	\begin{tabular}{| c | c | c |}
+	  	\hline
+	  	Posición & Equipo & Puntaje \\ \hline \hline
+		1 & Lanús & 3 \\ \hline
+		2 & Vélez Sarsfield & 3 \\ \hline
+		3 & Unión & 3 \\ \hline
+		4 & Temperley & 3 \\ \hline
+		5 & San Lorenzo & 3 \\ \hline
+		6 & Rosario Central & 3 \\ \hline
+		7 & River Plate & 3 \\ \hline
+		8 & Independiente & 3 \\ \hline
+		9 & Estudiantes (LP) & 3 \\ \hline
+		10 & Defensa y Justicia & 3 \\ \hline
+		11 & Argentinos Juniors & 3 \\ \hline
+		12 & Belgrano & 3 \\ \hline
+		13 & Boca Juniors & 3 \\ \hline
+		14 & Crucero del Norte & 1 \\ \hline
+		15 & Tigre & 1 \\ \hline
+		16 & San Martín (SJ) & 1 \\ \hline
+		17 & Godoy Cruz & 1 \\ \hline
+		18 & Newell's Old Boys & 0 \\ \hline
+		19 & Nueva Chicago & 0 \\ \hline
+		20 & Olimpo & 0 \\ \hline
+		21 & Quilmes & 0 \\ \hline
+		22 & Racing Club & 0 \\ \hline
+		23 & Aldosivi & 0 \\ \hline
+		24 & Colón & 0 \\ \hline
+		25 & Banfield & 0 \\ \hline
+		26 & Huracán & 0 \\ \hline
+		27 & Sarmiento & 0 \\ \hline
+		28 & Atlético de Rafaela & 0 \\ \hline
+		29 & Arsenal & 0 \\ \hline
+		30 & Gimnasia y Esgrima (LP) & 0 \\ \hline
+	\end{tabular}
+	\caption{\footnotesize Ranking correspondiente a la fecha 1 usando el método estándar.}
+\end{table}
+
+\begin{table}
+	\center
+	\begin{flushright}
+	\begin{tabular}{| m{16.65em} || m{17.15em} |}
+		\hline Fecha 12 & Fecha 13 \\ \hline
+	\end{tabular}
+
+	\begin{tabular}{| c | c | c || c | c |}
+	  	\hline
+	  	Posición & Equipo & Puntaje & Equipo & Puntaje \\ \hline \hline
+		1 & Boca Juniors & 0.108944 &  Aldosivi & 0.117217 \\ \hline
+		2 & River Plate & 0.0815019 & Boca Juniors & 0.0892615 \\ \hline
+		3 & Rosario Central & 0.0735106 & River Plate & 0.0657072 \\ \hline
+		4 & Aldosivi & 0.0546487 & Rosario Central & 0.0608375 \\ \hline
+		5 & San Lorenzo & 0.0511854 & Banfield & 0.0546665 \\ \hline
+		6 & Racing Club & 0.046461 & San Lorenzo & 0.0497559 \\ \hline
+		7 & Belgrano & 0.0464054 & Gimnasia y Esgrima (LP) & 0.0478387 \\ \hline
+		8 & Banfield & 0.0440866 & Vélez Sarsfield & 0.0426006 \\ \hline
+		9 & San Martín (SJ) & 0.0433587 & Racing Club & 0.0418281\\ \hline
+		10 & Newell's Old Boys & 0.0353829 & Newell's Old Boys & 0.036451 \\ \hline
+		11 & Lanús & 0.0320765 & Belgrano & 0.0356502 \\ \hline
+		12 & Gimnasia y Esgrima (LP) & 0.029684 & San Martín (SJ) & 0.0350081 \\ \hline
+		13 & Sarmiento & 0.0263866 & Lanús & 0.0346346 \\ \hline
+		14 & Arsenal & 0.0252073 & Estudiantes (LP) & 0.025968 \\ \hline
+		15 & Huracán & 0.0241481 & Argentinos Juniors & 0.0241652 \\ \hline
+		16 & Estudiantes (LP) & 0.024007 & Huracán & 0.0215508 \\ \hline
+		17 & Tigre & 0.023322 & Godoy Cruz & 0.0211769 \\ \hline
+		18 & Vélez Sarsfield & 0.0229058 & Sarmiento & 0.0210192 \\ \hline
+		19 & Independiente & 0.0224838 & Arsenal & 0.0200022 \\ \hline
+		20 & Argentinos Juniors & 0.0221471 & Unión & 0.0199389 \\ \hline
+		21 & Temperley & 0.0212702 & Defensa y Justicia & 0.019309 \\ \hline
+		22 & Unión & 0.0212572 & Tigre & 0.0179675 \\ \hline
+		23 & Defensa y Justicia & 0.0206203 & Independiente & 0.0170322 \\ \hline
+		24 & Quilmes & 0.0168138 & Temperley & 0.0158759 \\ \hline
+		25 & Godoy Cruz & 0.0166558 & Quilmes & 0.0158634 \\ \hline
+		26 & Colón & 0.0159257 & Crucero del Norte & 0.0127548 \\ \hline
+		27 & Olimpo & 0.0135905 & Colón & 0.0106429 \\ \hline
+		28 & Atlético de Rafaela & 0.0130908 & Olimpo & 0.00977677 \\ \hline
+		29 & Crucero del Norte & 0.0127524 & Atlético de Rafaela & 0.00877535 \\ \hline
+		30 & Nueva Chicago & 0.0101696 & Nueva Chicago & 0.00672374 \\ \hline
+	\end{tabular}
+	\end{flushright}
+	\caption{\footnotesize Posiciones de las fechas 12 y 13.}
+\end{table}
