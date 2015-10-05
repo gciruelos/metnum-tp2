@@ -1,9 +1,12 @@
 
 El objetivo del presente informe es resolver un problema práctico mediante el modelado matemático del mismo. Este problema consiste en modelar páginas web y ligas deportivas con cadenas de Markov, con el fin de obtener rankings para ellas.
 
-Para esto, dada una cadena de Markov, construida de una cierta manera que será formulada más adelante, se va a considerar el modelo de navegante aleatorio. En este modelo, se comienza en un nodo cualquiera del diagrama y se va navegando a trav\'es de los links. Además podemos extrapolar esta idea, originalmente diseñada para páginas web, y utilizarla en ligas deportivas.
+
+Para esto, dada una cadena de Markov, construida de una cierta manera que será formulada más adelante, se va a considerar el modelo de navegante aleatorio. En este modelo, se comienza en un nodo cualquiera del diagrama y se va navegando a trav\'es de los links.
 
 Entonces, la idea es, de alguna manera, rankear mejor aquellos nodos del diagrama de transición en los que el navegante aleatorio se encuentra más tiempo. Para ello, trataremos de encontrar un \emph{estado estacionario}, pues este representará cual es la probabilidad de que el navegante se encuentre en cada nodo, si lo dejaramos recorriendo el diagrama infinito tiempo.
+
+Además podemos extrapolar esta idea, originalmente diseñada para páginas web, y utilizarla en ligas deportivas.
 
 Volviendo a las cadenas de Markov, si la matriz de transición de la cadena es $P$ (o sea, $P_{ij}$ es la probabilidad de pasar del estado $i$ al $j$), estamos buscando algun vector $x$ tal que
 

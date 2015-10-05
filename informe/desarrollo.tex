@@ -1,5 +1,10 @@
 \subsection{Convenciones}
 
+A lo largo de todo el trabajo, nos referiremos a diferentes matrices, y nos referimos a distintas matrices con distintas letras en diferentes secciones. En general sus significados se desprenden del contexto, pero para aclarar, cada problema tiene 2 matrices, la de conectividad y la \emph{final}, que se usa como matriz de transición de la cadena de Markov.
+
+Además, a veces aparecerán matrices intermedias en los pasos para obtener la matriz final de transición desde la matriz original de conectividad, pero, de nuevo, su significado se desprenderá fácilmente del contexto.
+
+
 \subsection{Métodos numéricos usados}
 
 Como dijimos en la introducción, nuestro objetivo será, dada una matriz de transición $P$, encontrarle un autovector de autovalor asociado igual a 1 a su transpuesta. (Usamos la transpuesta por comodidad notacional).
@@ -104,6 +109,8 @@ La interfaz de MatrizDep provee las siguientes operaciones:
     \item MatrizDep(\textbf{ifstream\&} in): constructor de la matriz. Recibe un archivo abierto del cual parseará todos los datos que necesita, en el formato adecuado (el explicitado en el tp).
 
     \item \textbf{vector<double>} multiplicar(\textbf{vector<double>} x): autoexplicativa. Devuelve el resultado del producto $Ax$, donde $A$ es la matriz de la clase. El algoritmo que utilizamos es el común y corriente, el mismo que se utiliza al hacer cuentas a mano con matrices.
+
+    \item \textbf{vector<double>} rank\_comun(): devuelve el vector de puntajes de los equipos de acuerdo al ranking común del deporte en cuestión (en nuesto caso, será en fútbol, es decir 3 puntos por partido ganado, 1 punto por partido empatado y 0 puntos por partido perdido).
 \end{itemize}
 
 
@@ -135,4 +142,10 @@ A continuación siguen los m\'etodos utilizados para el modelado de rankings de 
 \end{itemize}
 
 \subsection{Experimentación}
+
+La experimentación del presente trabajo se divide a grandes rasgos en dos partes, la que concierne a páginas web y la que concierne a ligas deportivas.
+
+La primera es más completa y abarcativa, dado que no sólo abarcará un análisis cualitativo de los m\'etodos, si no que tambi\'en cuantitativo. Es decir, analizaremos tiempos y mediremos la convergencia de los m\'etodos utilizados.
+
+En la segunda parte, nos concentraremos en un profundo análisis cualitativo. Esto se debe a que el análisis cuantitativo (de tiempos y convergencia) no nos dará mas información que la obtenida previamente. Esto se debe a que los m\'etodos son parecidos: el m\'etodo GeM usa a Pagerank como su base.
 

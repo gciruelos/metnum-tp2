@@ -2,18 +2,22 @@
 
 \subsubsection{Proposición 1}
 \label{subsub:prop1}
-Si $P \in R^{n\times n}$ es una matriz de transición, es decir $0 \leq P_{ij} \leq 1$, y $\sum_j P_{ij} = 1 \ \forall i\in\{1,...,n\}$, entonces el mayor autovalor en módulo de $P^t$ es 1 o -1.
+Si $P \in R^{n\times n}$ es una matriz de transición, es decir $0 \leq P_{ij} \leq 1$, y $\sum_j P_{ij} = 1 \ \forall i\in\{1,...,n\}$, entonces el mayor autovalor en módulo de $P^t$ es 1, y en particular tiene a 1 como autovalor (eventualmente podría tener tamién a -1).
 
 \textbf{Demostración} Primero veamos que si $\lambda$ es autovalor de $P^t$, entonces $|\lambda| \leq 1$.
 
 Vale que $\rho(P^t) \leq ||P^t||$, $\rho(P^t)$ el radio espectral y $||-||$ cualquier norma inducida. En particular, si tomamos la norma 1, $||P^t||_1 = 1$, pues todas las columnas suman 1, pues $P$ es de transición. Entonces $|\lambda| \leq \rho(P^t) \leq 1$.
 
-Ahora, como las filas de $P$ suman 1, si multiplico $P (1, ..., 1)^t = (1, ..., 1)^t$. Es decir que 1 es autovalor de $P$. Entonces, como $P$ y $P^t$ tienen los mismos autovalores, listo.
+Ahora, como las filas de $P$ suman 1, si multiplico $P (1, ..., 1)^t = (1, ..., 1)^t$. Es decir que 1 es autovalor de $P$. Entonces, como $P$ y $P^t$ tienen los mismos autovalores, 1 es autovalor de $P^t$, que es lo que queríamos ver.
+
+\textbf{Observación} Probamos que 1 es efectivamente autovalor de la matriz, pero nada nos garantiza que -1 no lo sea. Sin embargo, si al aplicar el método de la potencia empezamos con un vector de todas entradas positivas (como lo hacemos), el resultado final también tendrá todas entradas positivas, resultando en un autovector asociado a autovalor 1.
 
 
 
 \newpage
-\nocite{*}
+% si se descomenta esto, aparecen todas las cosas de la bibliografia, hasta
+% las que nunca fueron citadas en el TP. es una eleccion de diseño.
+% \nocite{*}
 \printbibliography
 
 
