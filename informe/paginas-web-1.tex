@@ -127,3 +127,297 @@ De hecho, este experimento nos permite confirmar que el paso más costoso es rea
 Esto se debe a que la matriz de web-NotreDame es más esparsa, y al multiplicar $Ax$ con $A$ representada en CRS, el costo resulta lineal en la cantidad de elementos no nulos de la matriz. Esta última está intimamente relacionada con la cantidad de aristas del grafo. De esta manera se explica fácilmente el comportamiento a priori extraño de el algoritmo sobre estos datasets.
 
 
+\subsubsection{Comportamiento de PageRank e In-Deg}
+
+En esta sección estudiaremos como influye la forma de la red de enlaces entre los sitios web en el resultado final de los rankings de PageRank e In-Deg. Veremos las diferencias entre ambos métodos, sus ventajas y desventajas.
+
+Para comenzar nuestra investigación decidimos utilizar un grafo de tan solo 4 nodos, es un ejemplo extraido de \cite{Bryan2006}. Los resultados de pageRank y de In-Deg estan listados mas abajo, pero antes de verlos intentemos analizar que debería suceder. In-Deg decidirá la posición en el ranking de cada sitio web basandose unicamente en la cantidad de links que apunten al mismo por lo que preveer quién quedará primero se reduce a contar los links entrantes, se harán algunas observaciones interesantes de su funcionamiento mas adelante. En el caso de PageRank saber que sitio web tendrá un puesto alto en el ranking no será tan trivial como contar links, para entender mejor los resultados de este método será útil recordar la idea en la que se basa, el modelado de un navegante de la web que recorre cada sitio y donde se cataloga cada página según el tiempo que paso este en cada una.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+	\node[state]			 (A)				 {$A$};
+	\node[state]         (B) [below of=A] {$B$};
+	\node[state]         (C) [right of=A] {$C$};
+	\node[state]         (D) [below of=C] {$D$};
+	\path	(A) edge              node {} (B)
+            		edge              node {} (C)
+            		edge   [bend left]node {} (D)
+			(B) edge              node {} (C)        
+            		edge              node {} (D)
+			(C) edge              node {} (A)
+            (D)	edge  [bend left] node {} (A)
+            		edge              node {} (C);
+
+\end{tikzpicture}
+  \caption{\footnotesize{ Grafo 1: Ejemplo extraido de \cite{Bryan2006} }}
+  \label{fig:Rankings}
+\end{figure}
+
+Al correr los rankings se nota una gran diferencia de resultados entre cada método.
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{| c | c | c | c |}
+  \hline
+  Puestos & PageRank & In-Deg \\ \hline \hline
+  1 & A (0.368151) & C \\ \hline
+  2 & C (0.287961) & A y D \\ \hline
+  3 & D (0.202078) & B\\ \hline
+  4 & B (0.14181 ) & None \\ \hline
+\end{tabular}
+
+  \caption{\footnotesize{Puestos de cada pagina del Grafo 1 segun PageRank e In-deg}}
+  \label{fig:Rankings}
+\end{figure}
+
+Para In-Deg como era de esperarse quedó primero el nodo C por tener 3 nodos que lo apuntan, segundos A y D y por último C en tercer lugar. Con pageRank algo que nos llamó la atención al principio fue como terminó quedando en primer lugar el nodo A el cual no parecería, por sus conexiones, ser una página tan relevante, al hacer un análisis de mayor profundidad nos dimos cuenta de una caracteristica importante en la estructura de la red. El nodo C el cual es el que tiene la mayor cantidad de nodos entrantes solo tiene un nodo saliente y este va hacia A, el resultado de esto es que al recorrer la red y llegar a C, a menos que uno se teletransporte, terminará visitando A. Esto provoca que el tiempo que pasa el navegante en C lo pase también en A, agregado a este tiempo el que el navegante pasa de D a A se vuelve entendible que A haya resultado primero.
+
+\paragraph{Generalización del Análisis}
+
+A partir del grafo anterior surgen varias hipótesis sobre las que iremos discutiendo y experimentando en esta sección. Para hacer los experimentos recurriremos a casos simples y claros aunque quizas no lo suficientemente generales como para justificar una demostración totalmente abarcativa de nuestras hipotesis, el objetivo de esta sección será por lo tanto unicamente exponer de forma intuitiva y clara algunas reglas en el funcionamiento de pageRank e In-Deg que hemos observado, las cuales quedarán para demostrarse y generalizarse con mayor profundidad en trabajos futuros. Por ahora nos limitaremos a verificarlas para una cantidad limitada de grafos los cuales se verán mas abajo.
+
+Los grafos que estudiaremos pueden entenderse como un conjunto de nodos con links salientes y entrantes. Dividiremos entonces esta sección en dos para estudiar por separado los efectos de cada uno en los resultados de los rankings.
+
+\paragraph{Links Salientes}
+ Lo primero que veremos es como influyen los links salientes de una página $P$ en su posición en el ranking. Creemos que en ambos métodos lo ideal, al menos en teoría, será no tener ningún link saliente ya que en In-Deg al tener enlaces que apunten a otros sitios les estamos dando mayor puntaje lo cual podría ponerlos por encima de nosotros, por otro lado en pageRank si apuntamos a una página (o más) estamos, al igual que pasaba en el Grafo 1, provocando que el navegante cada vez que pase por nuestro espacio pase luego con cierta probabilidad por los otros a los que estamos apuntando, si solo apuntamos a uno o unos pocos nodos entonces le estaremos dando una gran ventaja ya que la probabilidad de que el navegante pase por ellos cada vez que pase por nosotros será alta y en consecuencia la posición en el ranking de estos sitios será favorecida, de aquí deducimos que lo mejor si se quiere apuntar a sitios webs en el caso de PageRank es apuntar a la mayor cantidad posible para no darle mucha ventaja a uno solo sino que esta se disemine, dandole una ventaja minima a cada uno.
+
+La hipotesis sobre In-Deg nos pareció que no requería mayores justificaciones. En el caso de pageRank creamos la siguiente red para verificar lo dicho previamente.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+	\node[state] 		(A)               {$A$};
+	\node[state]         (B) [right of=A] {$B$};
+	\node[state]         (C) [right of=B] {$C$};
+	\node[state]         (D) [above of=B] {$D$};
+
+	\path	(A) edge              node {} (D)
+			(B) edge              node {} (D)        
+			(C) edge              node {} (D);        
+
+
+\end{tikzpicture}
+  \caption{\footnotesize{ Grafo 2 }}
+  \label{fig:Rankings}
+\end{figure}
+
+Tenemos, en el Grafo 2, un nodo D el cual está primero tanto para In-Deg como para PageRank.
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{| c | c | c | c |}
+  \hline
+  Puestos & PageRank\\ \hline \hline
+  1 & D (0.541986)\\ \hline
+  2 & A, B y C(0.152671)\\ \hline
+\end{tabular}
+  \caption{\footnotesize{Puestos de cada pagina del grafo1 segun PageRank e In-deg}}
+  \label{fig:Rankings}
+\end{figure}
+
+Veamos que pasa cuando agregamos un nodo más de la siguiente manera.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+	\node[state] 		(A)               {$A$};
+	\node[state]         (B) [right of=A] {$B$};
+	\node[state]         (C) [right of=B] {$C$};
+	\node[state]         (D) [above of=B] {$D$};
+	\node[state]         (E) [above of=D] {$E$};
+%	\node[state]         (F) [above of=E]       {$D_n$};
+
+	\path	(A) edge              node {} (D)
+			(B) edge              node {} (D)        
+			(C) edge              node {} (D)        
+			(D) edge              node {} (E);
+%	\path[->, dotted] (E) edge	node {} (F);
+%	\path[->, dotted] (I) edge	node {} (D);        
+\end{tikzpicture}
+  \caption{\footnotesize{ Grafo 3 }}
+  \label{fig:Rankings}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{| c | c | c | c |}
+  \hline
+  Puestos & PageRank\\ \hline \hline
+  1 & E (0.380177)\\ \hline
+  2 & D (0.335934)\\ \hline
+  3 & A, B y C(0.0946297)\\ \hline
+\end{tabular}
+  \caption{\footnotesize{Puesto de cada nodo del grafo 3}}
+  \label{fig:Rankings}
+\end{figure}
+
+Al hacer esto ocurre lo predicho, el navegante, a menos que se teletransporte, pasara por E siempre, sumando a esto las veces que visita directamente a E debido a una teletransportación se vuelve entendible por que D esta ahora en segundo lugar. Veamos como podemos mejorar esta situación, claramente si cortamos el enlace a E volveremos a la situación previa donde estaba primero pero de ser esto imposible creemos que lo mejor que puede hacer el nodo D es conectarse a la mayor cantidad de páginas posibles, ya que asi podría lograr difuminar la ventaja que le da a cada sitio web. Para comprobar esto armamos los grafos 4 y 5.
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{| c | c | c | c |}
+  \hline
+  Puestos & In-Deg\\ \hline \hline
+  1 & D\\ \hline
+  2 & E\\ \hline
+  3 & A, B y C\\ \hline
+\end{tabular}
+  \caption{\footnotesize{Ranking del grafo 3 con In-Deg}}
+  \label{fig:Rankings}
+\end{figure}
+
+
+Es interesante contrastar este resultado con el que tendría In-Deg, para el grafo 3 obtenemos en primer lugar a D, esto sucede debido a que este método supone que tener una gran cantidad de sitios apuntandote es lo mas importante sin preocuparse por quienes sean los sitios en sí. Esta caracteristica es la que vuelve a In-Deg irrealista ya que no modela la diferencia entre un sitio apuntado por 3 nodos aislados y uno apuntado por 3 sitios de gran trayectoria.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+  \centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+	\node[state] 		(A)               {$A$};
+	\node[state]         (B) [right of=A] {$B$};
+	\node[state]         (C) [right of=B] {$C$};
+	\node[state]         (D) [above of=B] {$D$};
+	\node[state]         (E) [above left of=D] {$E$};
+	\node[state]         (F) [above right of=D] {$F$};
+
+	\path	(A) edge              node {} (D)
+			(B) edge              node {} (D)        
+			(C) edge              node {} (D)        
+			(D) edge              node {} (E)
+			(D) edge              node {} (F);
+\end{tikzpicture}
+  \caption{\footnotesize{ Grafo 4 }}
+  \label{fig:Rankings}
+
+\end{minipage}
+\hspace{0.02\textwidth}
+\begin{minipage}{0.48\textwidth}
+  \centering
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+	\node[state] 		(A)               {$A$};
+	\node[state]         (B) [right of=A] {$B$};
+	\node[state]         (C) [right of=B] {$C$};
+	\node[state]         (D) [above of=B] {$D$};
+	\node[state]         (E) [above left of=D] {$E$};
+	\node[state]         (F) [above of=D] {$F$};
+	\node[state]         (G) [above right of=D] {$G$};
+
+	\path	(A) edge              node {} (D)
+			(B) edge              node {} (D)        
+			(C) edge              node {} (D)        
+			(D) edge              node {} (E)
+			(D) edge              node {} (F)
+			(D) edge              node {} (G);
+		
+\end{tikzpicture}
+  \caption{\footnotesize{ Grafo 5 }}
+  \label{fig:Rankings}
+
+\end{minipage}
+\end{figure}
+
+Se puede ver como al apuntar D a mas sitios su supremacia se vuelve a reestablecer cada vez mas mientras mayor es la cantidad de nodos a los que apunta, corroborando lo dicho previamente.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+
+\begin{tabular}{| c | c | c | c |}
+  \hline
+  Puestos & PageRank\\ \hline \hline
+  1 & D (0.306893)\\ \hline
+  2 & E y F (0.21688)\\ \hline
+  3 & A, B y C(0.0864493)\\ \hline
+\end{tabular}
+  \caption{\footnotesize{Puesto de cada nodo del grafo 4}}
+  \label{fig:Rankings}
+
+\end{minipage}
+\hspace{0.02\textwidth}
+\begin{minipage}{0.48\textwidth}
+  \centering
+
+\begin{tabular}{| c | c | c | c |}
+  \hline
+  Puestos & PageRank\\ \hline \hline
+  1 & D (0.282476)\\ \hline
+  2 & E, F y G (0.159605)\\ \hline
+  3 & A, B y C(0.0795699)\\ \hline
+\end{tabular}
+  \caption{\footnotesize{Puesto de cada nodo del grafo 5}}
+  \label{fig:Rankings}
+
+\end{minipage}
+\end{figure}
+
+
+\paragraph{Links Entrantes}
+
+En el caso de In-Deg sale directamente de su definición como la cantidad de links entrantes decide la posición en el ranking de cada nodo. En el caso de PageRank la cantidad de páginas entrantes a un nodo creemos que tambien ayudara a este a ponerlo en una mejor posición aunque el nivel de ayuda que estos enlaces brinden dependerá de la importancia de las páginas de las cuales provengan y si estan apuntando a otros nodos o no. Analizar esto es como analizar lo discutido en la sección anterior desde el punto de vista inverso. Es decir, en el experimento anterior vimos que cada vez que D apuntaba a mas sitios la posición en el ranking de las páginas a las que apuntaba bajaba mas, a partir de eso, se deduce de forma inmediata que si queremos tener un ranking alto será importante no solo que nos apunten sino también que lo hagan con un grado de exclusividad lo mas alto posible.
+
+En este grafo intentamos verificar lo dicho, conjeturando que, a diferencia de lo que pasaría con In-Deg, con PageRank el nodo G saldrá mejor que el H y F a pesar de tener la misma cantidad de enlaces apuntandolos, debido a que H y F comparten los nodos entrantes a diferencia de G que los tiene exclusivamente para el.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+	\node[state] 		(A)               {$A$};
+	\node[state]         (B) [right of=A] {$B$};
+	\node[state]         (C) [right of=B] {$C$};
+	\node[state]         (D) [right of=C] {$D$};
+	\node[state]         (E) [right of=D] {$E$};
+	\node[state]         (F) [right of=E] {$F$};
+	\node[state]         (G) [above of=B] {$G$};
+	\node[state]         (H) [above right of=D] {$H$};
+	\node[state]         (I) [above left of=F] {$I$};
+
+
+	\path	(A) edge              node {} (G)
+			(B) edge              node {} (G)        
+			(C) edge              node {} (G)        
+			(D) edge              node {} (I)        
+			(E) edge              node {} (I)        
+			(F) edge              node {} (I)        
+			(D) edge              node {} (H)        
+			(E) edge              node {} (H)        
+			(F) edge              node {} (H);        
+
+
+\end{tikzpicture}
+  \caption{\footnotesize{ Grafo 6 }}
+  \label{fig:Rankings}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{| c | c | c | c |}
+  \hline
+  Puestos & PageRank\\ \hline \hline
+  1 & G (0.251774)\\ \hline
+  2 & H e I (0.161348)\\ \hline
+  3 & A, B, C, D, E y F (0.0709217)\\ \hline
+\end{tabular}
+  \caption{\footnotesize{Ranking del grafo 7}}
+  \label{fig:Rankings}
+\end{figure}
+
