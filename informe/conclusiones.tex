@@ -9,6 +9,7 @@ Con respecto al método pagerank:
 			\item Al modificar la norma que usamos para determinar el criterio de parada, vemos que usar una norma $p$ disminuye la cantidad de iteraciones cuanto mayor es $p$, pero al mismo tiempo genera que el resultado sea menos preciso. De forma similar, un $p$ más chico produce el efecto contrario.
 		\end{itemize}
 	\item Sobre la performance del método, vimos que el paso más costoso del algoritmo es realizar el método de la potencia. Pese a que la cantidad de iteraciones para dos datasets distintos fuera prácticamente igual, el tiempo de cómputo efectivo era distinto pues el costo de realizar cada producto de matriz por vector dependía linealmente de la cantidad de coeficientes no nulos de la matriz (debido a la representación CRS utilizada para la misma). Por lo tanto, para matrices más esparsas (correspondientes a grafos más disconexos), se requiere menos tiempo de cómputo.
+	\item En lo respectivo al análisis cualitativo, concluimos que pagerank permite conseguir rankings más realistas que In-Deg, como resultado de considerar no solo la cantidad de enlaces entrantes sino también la importancia relativa de los mismos. Además, vimos que pagerank le permite a cada página mejorar parcialmente su posición al agregar un mayor número de enlaces salientes. Como trabajo a futuro se plantea el generalizar y profundizar las propiedades vistas. 
 \end{itemize}
 
 Con respecto al modelo GeM:
