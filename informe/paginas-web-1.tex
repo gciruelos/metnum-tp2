@@ -3,16 +3,17 @@ Ahora procederemos a analizar, experimentar y discutir los métodos que conciern
 \subsubsection{Convergencia de PageRank}
 Para los experimentos de velocidad de convergencia y rendimiento en general de PageRank utilizamos los datasets de \cite{SNAP}. Para eso, elegimos tres datasets de diferentes tamaños y coeficiente de conectividad \footnote{Con esto nos referimos a que tan conectado está el grafo, esto puede medirse por ejemplo como $\frac{2e}{v(v-1)}$, donde $e$ son las aristas del grafo y $v$ los vertices, dado que el grafo completo tiene $\frac{v(v-1)}{2}$ aristas.}, web-Stanford, web-NotreDame y web-Google.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Dataset & Vértices & Aristas \\ \hline \hline
   web-Stanford & 281.903 & 2.312.497 \\ \hline
   web-NotreDame & 325.729 & 1.497.134 \\ \hline
   web-Google & 916.428 & 5.105.039 \\ \hline
 \end{tabular}
-\end{figure}
+\end{table}
 
 
 Lo primero que se puede decir de este Datasets es que la diferencia de cantidad de vértices de cada uno nos va a permitir analizar cómo varía según el tamaño de la red. 
@@ -86,10 +87,11 @@ Se puede probar fácilmente que para todo vector $x$, $||x||_1 \geq ||x||_2 \geq
 \subsubsection{Rendimiento de PageRank}
 A continuación analizaremos el rendimiento del algoritmo de PageRank implementado en este trabajo, es decir, el de \cite{Kamvar2003}. Para ello, utilizaremos los mismos datasets que en la sección anterior.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Dataset & Vértices & Aristas & Tiempo (segundos) \\ \hline \hline
   web-Stanford & 281.903 & 2.312.497 & 7.81882 \\ \hline
   web-NotreDame & 325.729 & 1.497.134 & 3.38163 \\ \hline
@@ -97,18 +99,19 @@ A continuación analizaremos el rendimiento del algoritmo de PageRank implementa
 \end{tabular}
 
   \caption{\footnotesize{Comparación de los tiempos que requiere el algoritmo para distintos datasets. Fue ejecutado con $c = 0.85$ y $tolerancia = 0.00001$.  Se tomó el promedio de 20 mediciones.}}
-  \label{fig:tiempos1}
-\end{figure}
+  \label{tab:tiempos1}
+\end{table}
 
 Podríamos empezar a sacar conclusiones apresuradas sobre estos datos, pero para que sean más significativos, preferimos realizar otro experimento antes de comenzar el análisis.
 Este experimento consiste en dividir el algoritmo en 2: primero el armado de la matriz (recordemos que como representamos la matriz en CRS este no es un paso trivial) y luego el paso de método de la potencia optimizado presentado en \cite{Kamvar2003}.
 
 Esto nos permitirá ver mejor el problema y tener datos más detallados, con el objetivo de poder analizar mejor que es lo que sucede.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Dataset & Tiempo total & Armado de matriz & Método de la potencia \\ \hline \hline
   web-Stanford & 7.81882 & 1.8968 & 5.91098 \\ \hline
   web-NotreDame &  3.38163 & 0.978923 & 2.42743 \\ \hline
@@ -116,11 +119,11 @@ Esto nos permitirá ver mejor el problema y tener datos más detallados, con el 
 \end{tabular}
 
   \caption{\footnotesize{Comparación de los tiempos que requiere el algoritmo para distintos datasets. Fue ejecutado con $c = 0.85$ y $tolerancia = 0.00001$. Se tomó el promedio de 20 mediciones. Todos los tiempos son en segundos. Las sumas probablemente no den bien porque fueron tomadas en diferentes mediciones. }}
-  \label{fig:tiempos2}
-\end{figure}
+  \label{tab:tiempos2}
+\end{table}
 
 
-Ahora, teniendo toda la información que nos proveen la figura \ref{fig:tiempos1}, \ref{fig:tiempos2} y los experimentos de la sección anterior, podemos hacer un análisis completo y riguroso.
+Ahora, teniendo toda la información que nos proveen las tablas \ref{tab:tiempos1}, \ref{tab:tiempos2} y los experimentos de la sección anterior, podemos hacer un análisis completo y riguroso.
 
 Podemos concluir primero que el paso más costoso del algoritmo es el método de la potencia. Justamente por eso \cite{Kamvar2003} se ocupa de intentar optimizar ese paso, dado que optimizarlo va a impactar fuertemente en el rendimiento general de la aplicación.
 

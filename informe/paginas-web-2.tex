@@ -31,10 +31,11 @@ Para comenzar nuestra investigación decidimos utilizar un grafo de tan solo 4 n
 
 Al correr los rankings se nota una gran diferencia de resultados entre cada método.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Puestos & PageRank & In-Deg \\ \hline \hline
   1 & A (0.368151) & C \\ \hline
   2 & C (0.287961) & A y D \\ \hline
@@ -43,8 +44,8 @@ Al correr los rankings se nota una gran diferencia de resultados entre cada mét
 \end{tabular}
 
   \caption{\footnotesize{Puestos de cada pagina del Grafo 1 segun PageRank e In-deg}}
-  \label{fig:Rankings}
-\end{figure}
+  \label{tab:Rankings}
+\end{table}
 
 Para In-Deg como era de esperarse quedó primero el nodo C por tener 3 nodos que lo apuntan, segundos A y D y por último C en tercer lugar. Con pageRank algo que nos llamó la atención al principio fue cómo terminó quedando en primer lugar el nodo A el cual no parecería, por sus conexiones, ser una página tan relevante. Al hacer un análisis de mayor profundidad nos dimos cuenta de una caracteristica importante en la estructura de la red. El nodo C el cual es el que tiene la mayor cantidad de nodos entrantes solo tiene un nodo saliente y este va hacia A, el resultado de esto es que al recorrer la red y llegar a C, a menos que uno se teletransporte, terminará visitando A. Esto provoca que el tiempo que pasa el navegante en C lo pase también en A, agregando a este tiempo el que el navegante pasa de D a A, se vuelve entendible que A haya resultado primero.
 
@@ -82,17 +83,18 @@ La hipótesis sobre In-Deg nos pareció que no requería mayores justificaciones
 
 Tenemos, en el Grafo 2, un nodo P el cual está primero tanto para In-Deg como para PageRank.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Puestos & PageRank\\ \hline \hline
   1 & P (0.541986)\\ \hline
   2 & A, B y C(0.152671)\\ \hline
 \end{tabular}
   \caption{\footnotesize{Puestos de cada pagina del grafo 2 segun PageRank e In-deg}}
-  \label{fig:Rankings}
-\end{figure}
+  \label{tab:Rankings2}
+\end{table}
 
 Veamos que pasa cuando agregamos un nodo más de la siguiente manera.
 
@@ -120,33 +122,35 @@ Veamos que pasa cuando agregamos un nodo más de la siguiente manera.
   \label{fig:Rankings}
 \end{figure}
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Puestos & PageRank\\ \hline \hline
   1 & E (0.380177)\\ \hline
   2 & P (0.335934)\\ \hline
   3 & A, B y C(0.0946297)\\ \hline
 \end{tabular}
   \caption{\footnotesize{Puesto de cada nodo del grafo 3}}
-  \label{fig:Rankings}
-\end{figure}
+  \label{tab:Rankings3}
+\end{table}
 
 Al hacer esto ocurre lo predicho: el navegante, a menos que se teletransporte, pasará por E siempre, sumando a esto las veces que visita directamente a E debido a una teletransportación se vuelve entendible por que P esta ahora en segundo lugar. Veamos como podemos mejorar esta situación. Claramente si cortamos el enlace a E volveremos a la situación previa donde P estaba primero, pero de ser esto imposible creemos que lo mejor que puede hacer el nodo P es conectarse a la mayor cantidad de páginas posibles, ya que así podría lograr difuminar la ventaja que le da a cada sitio web. Para comprobar esto armamos los grafos 4 y 5.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Puestos & In-Deg\\ \hline \hline
   1 & P\\ \hline
   2 & E\\ \hline
   3 & A, B y C\\ \hline
 \end{tabular}
   \caption{\footnotesize{Ranking del grafo 3 con In-Deg}}
-  \label{fig:Rankings}
-\end{figure}
+  \label{tab:Rankings4}
+\end{table}
 
 
 Es interesante contrastar este resultado con el que tendría In-Deg, para el grafo 3 obtenemos en primer lugar a P, esto sucede debido a que este método supone que tener una gran cantidad de sitios apuntandote es lo más importante sin preocuparse por quienes sean los sitios en sí. Esta característica es la que vuelve a In-Deg irrealista ya que no modela la diferencia entre un sitio apuntado por 3 nodos aislados y uno apuntado por 3 sitios de gran trayectoria.
@@ -208,20 +212,21 @@ Es interesante contrastar este resultado con el que tendría In-Deg, para el gra
 
 Se puede ver como al apuntar P a más sitios, su supremacia se vuelve a reestablecer cada vez más mientras mayor es la cantidad de nodos a los que apunta, corroborando lo dicho previamente.
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{minipage}{0.48\textwidth}
 \centering
 
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Puestos & PageRank\\ \hline \hline
   1 & P (0.306893)\\ \hline
   2 & E y F (0.21688)\\ \hline
   3 & A, B y C(0.0864493)\\ \hline
 \end{tabular}
   \caption{\footnotesize{Puesto de cada nodo del grafo 4}}
-  \label{fig:Rankings}
+  \label{tab:Rankings5}
 
 \end{minipage}
 \hspace{0.02\textwidth}
@@ -230,16 +235,17 @@ Se puede ver como al apuntar P a más sitios, su supremacia se vuelve a reestabl
 
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Puestos & PageRank\\ \hline \hline
   1 & P (0.282476)\\ \hline
   2 & E, F y G (0.159605)\\ \hline
   3 & A, B y C(0.0795699)\\ \hline
 \end{tabular}
   \caption{\footnotesize{Puesto de cada nodo del grafo 5}}
-  \label{fig:Rankings}
+  \label{tab:Rankings6}
 
 \end{minipage}
-\end{figure}
+\end{table}
 
 
 \paragraph{Links Entrantes}
@@ -280,16 +286,17 @@ En este grafo intentamos verificar lo dicho, conjeturando que, a diferencia de l
   \label{fig:Rankings}
 \end{figure}
 
-\begin{figure}[H]
+\begin{table}[H]
 \centering
 \begin{tabular}{| c | c | c | c |}
   \hline
+  \rowcolor{LightCyan}
   Puestos & PageRank\\ \hline \hline
   1 & G (0.251774)\\ \hline
   2 & H e I (0.161348)\\ \hline
   3 & A, B, C, D, E y F (0.0709217)\\ \hline
 \end{tabular}
   \caption{\footnotesize{Ranking del grafo 6}}
-  \label{fig:Rankings}
-\end{figure}
+  \label{tab:Rankings7}
+\end{table}
 
