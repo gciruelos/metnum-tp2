@@ -3,7 +3,7 @@
 
 En esta sección estudiaremos como influye la forma de la red de enlaces entre los sitios web en el resultado final de los rankings de PageRank e In-Deg. Veremos las diferencias entre ambos métodos, sus ventajas y desventajas.
 
-Para comenzar nuestra investigación decidimos utilizar un grafo de tan solo 4 nodos, es un ejemplo extraido de \cite{Bryan2006}. Los resultados de pageRank y de In-Deg estan listados mas abajo, pero antes de verlos intentemos analizar que debería suceder. In-Deg decidirá la posición en el ranking de cada sitio web basandose unicamente en la cantidad de links que apunten al mismo por lo que preveer quién quedará primero se reduce a contar los links entrantes, se harán algunas observaciones interesantes de su funcionamiento mas adelante. En el caso de PageRank saber que sitio web tendrá un puesto alto en el ranking no será tan trivial como contar links, para entender mejor los resultados de este método será útil recordar la idea en la que se basa, el modelado de un navegante de la web que recorre cada sitio y donde se cataloga cada página según el tiempo que paso este en cada una.
+Para comenzar nuestra investigación decidimos utilizar un grafo de tan solo 4 nodos, un ejemplo extraido de \cite{Bryan2006}. Los resultados de pageRank y de In-Deg estan listados más abajo, pero antes de verlos intentemos analizar que debería suceder. In-Deg decidirá la posición en el ranking de cada sitio web basándose únicamente en la cantidad de links que apunten al mismo por lo que preveer quién quedará primero se reduce a contar los links entrantes, se harán algunas observaciones interesantes de su funcionamiento más adelante. En el caso de PageRank saber que sitio web tendrá un puesto alto en el ranking no será tan trivial como contar links. Para entender mejor los resultados de este método será útil recordar la idea en la que se basa, el modelado de un navegante de la web que recorre cada sitio y donde se cataloga cada página según el tiempo que paso este en cada una.
 
 \begin{figure}[H]
 \centering
@@ -46,18 +46,18 @@ Al correr los rankings se nota una gran diferencia de resultados entre cada mét
   \label{fig:Rankings}
 \end{figure}
 
-Para In-Deg como era de esperarse quedó primero el nodo C por tener 3 nodos que lo apuntan, segundos A y D y por último C en tercer lugar. Con pageRank algo que nos llamó la atención al principio fue como terminó quedando en primer lugar el nodo A el cual no parecería, por sus conexiones, ser una página tan relevante, al hacer un análisis de mayor profundidad nos dimos cuenta de una caracteristica importante en la estructura de la red. El nodo C el cual es el que tiene la mayor cantidad de nodos entrantes solo tiene un nodo saliente y este va hacia A, el resultado de esto es que al recorrer la red y llegar a C, a menos que uno se teletransporte, terminará visitando A. Esto provoca que el tiempo que pasa el navegante en C lo pase también en A, agregado a este tiempo el que el navegante pasa de D a A se vuelve entendible que A haya resultado primero.
+Para In-Deg como era de esperarse quedó primero el nodo C por tener 3 nodos que lo apuntan, segundos A y D y por último C en tercer lugar. Con pageRank algo que nos llamó la atención al principio fue cómo terminó quedando en primer lugar el nodo A el cual no parecería, por sus conexiones, ser una página tan relevante. Al hacer un análisis de mayor profundidad nos dimos cuenta de una caracteristica importante en la estructura de la red. El nodo C el cual es el que tiene la mayor cantidad de nodos entrantes solo tiene un nodo saliente y este va hacia A, el resultado de esto es que al recorrer la red y llegar a C, a menos que uno se teletransporte, terminará visitando A. Esto provoca que el tiempo que pasa el navegante en C lo pase también en A, agregando a este tiempo el que el navegante pasa de D a A, se vuelve entendible que A haya resultado primero.
 
 \paragraph{Generalización del Análisis}
 
-A partir del grafo anterior surgen varias hipótesis sobre las que iremos discutiendo y experimentando en esta sección. Para hacer los experimentos recurriremos a casos simples y claros aunque quizas no lo suficientemente generales como para justificar una demostración totalmente abarcativa de nuestras hipotesis, el objetivo de esta sección será por lo tanto unicamente exponer de forma intuitiva y clara algunas reglas en el funcionamiento de pageRank e In-Deg que hemos observado, las cuales quedarán para demostrarse y generalizarse con mayor profundidad en trabajos futuros. Por ahora nos limitaremos a verificarlas para una cantidad limitada de grafos los cuales se verán mas abajo.
+A partir del grafo anterior surgen varias hipótesis sobre las que iremos discutiendo y experimentando en esta sección. Para hacer los experimentos recurriremos a casos simples y claros aunque quizas no lo suficientemente generales como para justificar una demostración totalmente abarcativa de nuestras hipotesis. El objetivo de esta sección será por lo tanto únicamente exponer de forma intuitiva y clara algunas reglas en el funcionamiento de pageRank e In-Deg que hemos observado, las cuales quedarán para demostrarse y generalizarse con mayor profundidad en trabajos futuros. Por ahora nos limitaremos a verificarlas para una cantidad limitada de grafos los cuales se verán más abajo.
 
 Los grafos que estudiaremos pueden entenderse como un conjunto de nodos con links salientes y entrantes. Dividiremos entonces esta sección en dos para estudiar por separado los efectos de cada uno en los resultados de los rankings.
 
 \paragraph{Links Salientes}
- Lo primero que veremos es como influyen los links salientes de una página $P$ en su posición en el ranking. Creemos que en ambos métodos lo ideal, al menos en teoría, será no tener ningún link saliente ya que en In-Deg al tener enlaces que apunten a otros sitios les estamos dando mayor puntaje lo cual podría ponerlos por encima de nosotros, por otro lado en pageRank si apuntamos a una página (o más) estamos, al igual que pasaba en el Grafo 1, provocando que el navegante cada vez que pase por nuestro espacio pase luego con cierta probabilidad por los otros a los que estamos apuntando, si solo apuntamos a uno o unos pocos nodos entonces le estaremos dando una gran ventaja ya que la probabilidad de que el navegante pase por ellos cada vez que pase por nosotros será alta y en consecuencia la posición en el ranking de estos sitios será favorecida, de aquí deducimos que lo mejor si se quiere apuntar a sitios webs en el caso de PageRank es apuntar a la mayor cantidad posible para no darle mucha ventaja a uno solo sino que esta se disemine, dandole una ventaja minima a cada uno.
+ Lo primero que veremos es como influyen los links salientes de una página $P$ en su posición en el ranking. Creemos que en ambos métodos lo ideal, al menos en teoría, será no tener ningún link saliente ya que en In-Deg al tener enlaces que apunten a otros sitios les estamos dando mayor puntaje lo cual podría ponerlos por encima de nosotros; por otro lado en pageRank si apuntamos a una página (o más) estamos, al igual que pasaba en el Grafo 1, provocando que el navegante cada vez que pase por nuestro espacio pase luego con cierta probabilidad por los otros a los que estamos apuntando, si solo apuntamos a uno o unos pocos nodos entonces le estaremos dando una gran ventaja ya que la probabilidad de que el navegante pase por ellos cada vez que pase por nosotros será alta y en consecuencia la posición en el ranking de estos sitios será favorecida. De aquí deducimos que lo mejor si se quiere apuntar a sitios webs en el caso de PageRank es apuntar a la mayor cantidad posible para no darle mucha ventaja a uno solo sino que esta se disemine, dándole una ventaja mínima a cada uno.
 
-La hipotesis sobre In-Deg nos pareció que no requería mayores justificaciones. En el caso de pageRank creamos la siguiente red para verificar lo dicho previamente.
+La hipótesis sobre In-Deg nos pareció que no requería mayores justificaciones. En el caso de pageRank creamos la siguiente red para verificar lo dicho previamente.
 
 \begin{figure}[H]
 \centering
@@ -133,7 +133,7 @@ Veamos que pasa cuando agregamos un nodo más de la siguiente manera.
   \label{fig:Rankings}
 \end{figure}
 
-Al hacer esto ocurre lo predicho, el navegante, a menos que se teletransporte, pasara por E siempre, sumando a esto las veces que visita directamente a E debido a una teletransportación se vuelve entendible por que P esta ahora en segundo lugar. Veamos como podemos mejorar esta situación, claramente si cortamos el enlace a E volveremos a la situación previa donde estaba primero pero de ser esto imposible creemos que lo mejor que puede hacer el nodo D es conectarse a la mayor cantidad de páginas posibles, ya que asi podría lograr difuminar la ventaja que le da a cada sitio web. Para comprobar esto armamos los grafos 4 y 5.
+Al hacer esto ocurre lo predicho: el navegante, a menos que se teletransporte, pasará por E siempre, sumando a esto las veces que visita directamente a E debido a una teletransportación se vuelve entendible por que P esta ahora en segundo lugar. Veamos como podemos mejorar esta situación. Claramente si cortamos el enlace a E volveremos a la situación previa donde P estaba primero, pero de ser esto imposible creemos que lo mejor que puede hacer el nodo P es conectarse a la mayor cantidad de páginas posibles, ya que así podría lograr difuminar la ventaja que le da a cada sitio web. Para comprobar esto armamos los grafos 4 y 5.
 
 \begin{figure}[H]
 \centering
@@ -149,7 +149,7 @@ Al hacer esto ocurre lo predicho, el navegante, a menos que se teletransporte, p
 \end{figure}
 
 
-Es interesante contrastar este resultado con el que tendría In-Deg, para el grafo 3 obtenemos en primer lugar a P, esto sucede debido a que este método supone que tener una gran cantidad de sitios apuntandote es lo mas importante sin preocuparse por quienes sean los sitios en sí. Esta caracteristica es la que vuelve a In-Deg irrealista ya que no modela la diferencia entre un sitio apuntado por 3 nodos aislados y uno apuntado por 3 sitios de gran trayectoria.
+Es interesante contrastar este resultado con el que tendría In-Deg, para el grafo 3 obtenemos en primer lugar a P, esto sucede debido a que este método supone que tener una gran cantidad de sitios apuntandote es lo más importante sin preocuparse por quienes sean los sitios en sí. Esta característica es la que vuelve a In-Deg irrealista ya que no modela la diferencia entre un sitio apuntado por 3 nodos aislados y uno apuntado por 3 sitios de gran trayectoria.
 
 \begin{figure}[H]
 \centering
@@ -206,7 +206,7 @@ Es interesante contrastar este resultado con el que tendría In-Deg, para el gra
 \end{minipage}
 \end{figure}
 
-Se puede ver como al apuntar P a mas sitios su supremacia se vuelve a reestablecer cada vez mas mientras mayor es la cantidad de nodos a los que apunta, corroborando lo dicho previamente.
+Se puede ver como al apuntar P a más sitios, su supremacia se vuelve a reestablecer cada vez más mientras mayor es la cantidad de nodos a los que apunta, corroborando lo dicho previamente.
 
 \begin{figure}[H]
 \centering
@@ -216,7 +216,7 @@ Se puede ver como al apuntar P a mas sitios su supremacia se vuelve a reestablec
 \begin{tabular}{| c | c | c | c |}
   \hline
   Puestos & PageRank\\ \hline \hline
-  1 & D (0.306893)\\ \hline
+  1 & P (0.306893)\\ \hline
   2 & E y F (0.21688)\\ \hline
   3 & A, B y C(0.0864493)\\ \hline
 \end{tabular}
@@ -231,7 +231,7 @@ Se puede ver como al apuntar P a mas sitios su supremacia se vuelve a reestablec
 \begin{tabular}{| c | c | c | c |}
   \hline
   Puestos & PageRank\\ \hline \hline
-  1 & D (0.282476)\\ \hline
+  1 & P (0.282476)\\ \hline
   2 & E, F y G (0.159605)\\ \hline
   3 & A, B y C(0.0795699)\\ \hline
 \end{tabular}
@@ -244,9 +244,9 @@ Se puede ver como al apuntar P a mas sitios su supremacia se vuelve a reestablec
 
 \paragraph{Links Entrantes}
 
-En el caso de In-Deg sale directamente de su definición como la cantidad de links entrantes decide la posición en el ranking de cada nodo. En el caso de PageRank la cantidad de páginas entrantes a un nodo creemos que tambien ayudara a este a ponerlo en una mejor posición aunque el nivel de ayuda que estos enlaces brinden dependerá de la importancia de las páginas de las cuales provengan y si estan apuntando a otros nodos o no. Analizar esto es como analizar lo discutido en la sección anterior desde el punto de vista inverso. Es decir, en el experimento anterior vimos que cada vez que P apuntaba a mas sitios la posición en el ranking de las páginas a las que apuntaba bajaba mas, a partir de eso, se deduce de forma inmediata que si queremos tener un ranking alto será importante no solo que nos apunten sino también que lo hagan con un grado de exclusividad lo mas alto posible.
+En el caso de In-Deg sale directamente de su definición como la cantidad de links entrantes decide la posición en el ranking de cada nodo. En el caso de PageRank la cantidad de páginas entrantes a un nodo creemos que tambien ayudará a este a ponerlo en una mejor posición, aunque el nivel de ayuda que estos enlaces brinden dependerá de la importancia de las páginas de las cuales provengan y si están apuntando a otros nodos o no. Analizar esto es como analizar lo discutido en la sección anterior desde el punto de vista inverso. Es decir, en el experimento anterior vimos que cada vez que P apuntaba a más sitios la posición en el ranking de las páginas a las que apuntaba bajaba más. A partir de eso, se deduce de forma inmediata que si queremos tener un ranking alto será importante no solo que nos apunten sino también que lo hagan con un grado de exclusividad lo más alto posible.
 
-En este grafo intentamos verificar lo dicho, conjeturando que, a diferencia de lo que pasaría con In-Deg, con PageRank el nodo G saldrá mejor que el H y F a pesar de tener la misma cantidad de enlaces apuntandolos, debido a que H y F comparten los nodos entrantes a diferencia de G que los tiene exclusivamente para el.
+En este grafo intentamos verificar lo dicho, conjeturando que, a diferencia de lo que pasaría con In-Deg, con PageRank el nodo G saldrá mejor que el H y F a pesar de tener la misma cantidad de enlaces apuntándolos, debido a que H y F comparten los nodos entrantes a diferencia de G que los tiene exclusivamente para él.
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
