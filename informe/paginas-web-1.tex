@@ -15,7 +15,7 @@ Para los experimentos de velocidad de convergencia y rendimiento en general de P
 \end{figure}
 
 
-Lo primero que se puede decir de este Datasets es que la diferencia de cantidad de vértices de cada uno nos va a permitir analizar como varía según el tamaño de la red. 
+Lo primero que se puede decir de este Datasets es que la diferencia de cantidad de vértices de cada uno nos va a permitir analizar cómo varía según el tamaño de la red. 
 
 Además, notemos como el dataset web-Stanford está mucho más conectado que el dataset web-NotreDame, dado que tiene menos vértices pero más aristas. Creemos que esto va a impactar negativamente en la performance, dado que sobre una red poco conectada el algoritmo va a converger más rápido.
 
@@ -33,20 +33,20 @@ Concluidas las hipótesis relacionadas a la convergencia del método, procedamos
 \begin{minipage}{0.48\textwidth}
   \centering
     \includegraphics[width=1\textwidth]{imgs/convergencia-stanford.pdf}
-  \caption{\footnotesize{Comparación de la velocidad de convergencia del el método para el dataset web-Stanford.}}
+  \caption{\footnotesize{Comparación de la velocidad de convergencia del método para el dataset web-Stanford.}}
   \label{fig:conv1}
 \end{minipage}
 \hspace{0.02\textwidth}
 \begin{minipage}{0.48\textwidth}
   \centering
     \includegraphics[width=1\textwidth]{imgs/convergencia-notredame.pdf}
-  \caption{\footnotesize{Comparación de la velocidad de convergencia del el método para el dataset web-NotreDame.}}
+  \caption{\footnotesize{Comparación de la velocidad de convergencia del método para el dataset web-NotreDame.}}
   \label{fig:conv2}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
   \centering
     \includegraphics[width=1\textwidth]{imgs/convergencia-google.pdf}
-  \caption{\footnotesize{Comparación de la velocidad de convergencia del el método para el dataset web-Google.}}
+  \caption{\footnotesize{Comparación de la velocidad de convergencia del método para el dataset web-Google.}}
   \label{fig:conv3}
 \end{minipage}
 \end{figure}
@@ -125,7 +125,7 @@ Ahora, teniendo toda la información que nos proveen la figura \ref{fig:tiempos1
 Podemos concluir primero que el paso más costoso del algoritmo es el método de la potencia. Justamente por eso \cite{Kamvar2003} se ocupa de intentar optimizar ese paso, dado que optimizarlo va a impactar fuertemente en el rendimiento general de la aplicación.
 
 
-Otro aspecto interesante para ver es, como aunque las iteraciones requeridas para cada dataset son bastante similares, el costo de cada operación es muy distinto, pues el tamaño de los vectores varía, y las entradas no nulas de la matriz son distintas. 
+Otro aspecto interesante para ver es como, aunque las iteraciones requeridas para cada dataset son bastante similares, el costo de cada operación es muy distinto, pues el tamaño de los vectores varía, y las entradas no nulas de la matriz son distintas. 
 
 De hecho, este experimento nos permite confirmar que el paso más costoso es realizar el producto de la matriz y el vector $P^t x^{(k)}$, ya que se puede ver como el método de la potencia en el caso de web-NotreDame tarda menos que en el caso de web-Stanford, aunque los vectores sean más largos. 
 
