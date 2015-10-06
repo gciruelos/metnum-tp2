@@ -1,0 +1,16 @@
+{
+    ".deps_version": 2, 
+    "g++ -c ./tp-main.cpp -o ./tp-main.o -std=c++0x -g": {
+        ".": "input-5058f1af8388633f609cadb75a75dc9d", 
+        "matriz.h": "input-d8428ad6ea8bcd582c8877254783a5c8", 
+        "matriz_deportes.h": "input-ea80a06d8fb74cfd2cb0463c0e6842f1", 
+        "problema.h": "input-ef4f28b02720d3d9f13786d073260c07", 
+        "tp-main.cpp": "input-6ccdf5367aee9e0d5e29eaefda43a4dd", 
+        "tp-main.o": "output-dcf7ae63638a4dd466c903ba9afe13d5"
+    }, 
+    "g++ -o ./tp ./tp-main.o": {
+        ".": "input-5058f1af8388633f609cadb75a75dc9d", 
+        "tp": "output-a73f546fc63f9080121db6aee2426864", 
+        "tp-main.o": "input-dcf7ae63638a4dd466c903ba9afe13d5"
+    }
+}

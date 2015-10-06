@@ -1,0 +1,115 @@
+#ifndef MATRIZ_DEPORTES_H
+#define MATRIZ_DEPORTES_H
+
+#include <vector>
+#include <iostream>
+#include <utility> // std::pair
+#include <map>
+#include <sstream>
+#include <algorithm>
+
+typedef unsigned int uint;
+
+class MatrizDep {
+
+public:
+
+    MatrizDep(std::ifstream& in, double c){ 
+        uint fecha, equipo1, goles1, equipo2, goles2; 
+        uint nodes, edges;
+
+
+        char numeral; std::string dummy;
+        
+        in >> nodes >> edges; // leo nodos y edges 
+        
+        std::vector<std::vector<double> >  h;
+
+        // armo la matriz
+        for(uint i = 0; i<nodes; i++){
+            h.push_back(std::vector<double>(nodes, 0));
+            m.push_back(std::vector<double>(nodes, 0));
+            ranking_comun.push_back(0);
+        }
+
+
+        for(uint i = 0; i < edges; i++){
+             in >> fecha >> equipo1 >> goles1 >> equipo2 >> goles2;
+             // los nodos se numeran desde 1...
+             if(fecha > 26) break; //uso esta linea para tomar el subconjunto de fechas que quiero
+
+             equipo1--; equipo2--;	
+             if(goles1 > goles2){
+                h[equipo2][equipo1] += goles1-goles2;
+				ranking_comun[equipo1] += 3;
+             } else if (goles1 < goles2){
+                h[equipo1][equipo2] += goles2-goles1;
+				ranking_comun[equipo2] += 3;
+             } else {
+				ranking_comun[equipo1] += 1;
+				ranking_comun[equipo2] += 1;
+                // En caso de empate no alteramos el ranking GeM
+             }
+        }
+
+        // normalizo segun lo que dice GeM 
+        std::vector<double> goles;
+        for(int i = 0; i<nodes; i++){
+            double accum = 0;
+            for(int j = 0; j<nodes; j++){
+                accum+=h[i][j];
+            }
+            goles.push_back(accum);
+        }
+
+        double eps = 0.00001; //si un numero es menor que esto, lo considero 0
+        for(int i = 0; i<nodes; i++){
+            for(int j = 0; j<nodes; j++){
+                if(goles[i]<eps){
+                    h[i][j] = 1.0/nodes;
+                } else {
+                    // ver paper para esta cuenta
+                    h[i][j] = c * h[i][j] / goles[i]  +  (1-c) / nodes;
+                }
+            } 
+        }
+        // m es h transpuesta
+        for(int i = 0; i<nodes; i++){
+            for(int j = 0; j<nodes; j++){
+                m[i][j] = h[j][i];
+            } 
+        }
+
+    }
+
+    uint get_nodes(){
+        return m.size();
+    }
+
+    std::vector<double> rank_comun(){
+        return ranking_comun;
+    }
+
+    std::vector<double> multiplicar(std::vector<double> x){
+        std::vector<double> y;
+
+        for(uint i = 0; i<m.size(); i++){
+            double accum = 0;
+            for(uint j = 0; j<m[i].size(); j++){
+                accum += x[j] *((double) m[i][j]);
+            }
+            y.push_back(accum);
+        }
+        return y;
+    }
+
+
+
+    
+
+private:
+    std::vector<std::vector<double> >  m;
+	std::vector<double> ranking_comun;
+};
+
+#endif // MATRIZ_DEPORTES_H
